@@ -21,10 +21,19 @@ pip install -r requirements.txt
 python run.py
 ```
 
-Legt/aktualisiert `watches.db` (SQLite) mit zwei Tabellen:
+Legt/aktualisiert `watches.db` (SQLite) mit drei Tabellen:
 
-- `listings` (brand, model, reference_number, seller, platform, url, first_seen, last_seen, status)
+- `listings` (brand, model, model_line, reference_number, condition, year, has_papers,
+  has_box, band_material, dial_color, image_url, seller, platform, url,
+  first_seen, last_seen, status)
 - `price_snapshots` (listing_id, date, price, currency)
+- `favorites` (brand, model_line, reference_number, display_name, image_url, added_at) —
+  frei anlegbare Merkliste, unabhängig davon ob gerade ein Angebot existiert
+
+Datenqualität pro Feld ist je Quelle unterschiedlich: Grimmeissen liefert
+condition/year/papers/box/band/dial strukturiert von der Detailseite.
+Rothfuss und Cologne Watch liefern diese Felder nur best-effort per Regex aus
+Titel/Beschreibung (Cologne Watch am unzuverlässigsten, v.a. bei `condition`).
 
 ## Automatisierung
 
