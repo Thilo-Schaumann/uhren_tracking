@@ -2,7 +2,7 @@ name: Daily watch scrape
 
 on:
   schedule:
-    - cron: "0 6 * * *"
+    - cron: "0 4 * * *"  # 06:00 CEST / 04:00 UTC — shifts to 05:00 CET after DST ends in October
   workflow_dispatch: {}
 
 jobs:
