@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 dashboard_data.json
 dashboard.html
+thumbnails_cache.json
