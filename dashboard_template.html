@@ -21,46 +21,29 @@
     --p-grimmeissen: #2a78d6;
     --p-rothfuss: #eb6834;
     --p-cologne: #1baf7a;
+    --logo-plate: #f3f2ee;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --surface: #1a1a19;
-      --plane: #0d0d0d;
-      --card: #232322;
-      --ink: #ffffff;
-      --ink-secondary: #c3c2b7;
-      --ink-muted: #898781;
-      --gridline: #2c2c2a;
-      --border: rgba(255,255,255,0.10);
-      --accent: #3987e5;
-      --accent-ink: #ffffff;
-      --star-off: #52514e;
-      --star-on: #c98500;
-      --good: #0ca30c;
-      --p-grimmeissen: #3987e5;
-      --p-rothfuss: #d95926;
-      --p-cologne: #199e70;
+      --surface: #1a1a19; --plane: #0d0d0d; --card: #232322;
+      --ink: #ffffff; --ink-secondary: #c3c2b7; --ink-muted: #898781;
+      --gridline: #2c2c2a; --border: rgba(255,255,255,0.10);
+      --accent: #3987e5; --accent-ink: #ffffff;
+      --star-off: #52514e; --star-on: #c98500; --good: #0ca30c;
+      --p-grimmeissen: #3987e5; --p-rothfuss: #d95926; --p-cologne: #199e70;
+      --logo-plate: #2c2c2a;
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --surface: #1a1a19;
-    --plane: #0d0d0d;
-    --card: #232322;
-    --ink: #ffffff;
-    --ink-secondary: #c3c2b7;
-    --ink-muted: #898781;
-    --gridline: #2c2c2a;
-    --border: rgba(255,255,255,0.10);
-    --accent: #3987e5;
-    --accent-ink: #ffffff;
-    --star-off: #52514e;
-    --star-on: #c98500;
-    --good: #0ca30c;
-    --p-grimmeissen: #3987e5;
-    --p-rothfuss: #d95926;
-    --p-cologne: #199e70;
+    --surface: #1a1a19; --plane: #0d0d0d; --card: #232322;
+    --ink: #ffffff; --ink-secondary: #c3c2b7; --ink-muted: #898781;
+    --gridline: #2c2c2a; --border: rgba(255,255,255,0.10);
+    --accent: #3987e5; --accent-ink: #ffffff;
+    --star-off: #52514e; --star-on: #c98500; --good: #0ca30c;
+    --p-grimmeissen: #3987e5; --p-rothfuss: #d95926; --p-cologne: #199e70;
+    --logo-plate: #2c2c2a;
   }
 
   * { box-sizing: border-box; }
@@ -93,10 +76,11 @@
   .star-btn:hover { color: var(--star-on); }
 
   .empty-state { border: 1px dashed var(--gridline); border-radius: 10px; padding: 28px; text-align: center; color: var(--ink-secondary); font-size: 14px; }
-  .empty-state button { margin-top: 12px; }
 
   .btn { background: var(--accent); color: var(--accent-ink); border: none; border-radius: 7px; padding: 8px 14px; font-size: 13px; font-weight: 600; }
   .btn.secondary { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+  .btn.ghost { background: transparent; color: var(--ink-secondary); border: none; padding: 6px 4px; font-size: 13px; font-weight: 600; }
+  .btn.ghost:hover { color: var(--ink); }
 
   .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
 
@@ -121,8 +105,12 @@
   .portal-row .val { color: var(--ink); }
   .portal-row.unavailable .val { color: var(--ink-muted); }
 
-  .bars { display: flex; align-items: flex-end; gap: 3px; height: 44px; }
-  .bar { flex: 1; border-radius: 3px 3px 1px 1px; min-width: 4px; }
+  .axis-chart { display: flex; gap: 6px; }
+  .axis-labels { display: flex; flex-direction: column; justify-content: space-between; font-size: 9.5px; color: var(--ink-muted); text-align: right; padding-bottom: 1px; }
+  .axis-plot { position: relative; flex: 1; border-left: 1px solid var(--gridline); }
+  .axis-plot .gridline { position: absolute; left: 0; right: 0; border-top: 1px solid var(--gridline); }
+  .bars { position: relative; display: flex; align-items: flex-end; gap: 3px; height: 100%; }
+  .bar { flex: 1; border-radius: 3px 3px 1px 1px; min-width: 4px; position: relative; z-index: 1; }
 
   .brand-tile-list { display: flex; flex-direction: column; gap: 3px; font-size: 12.5px; color: var(--ink-secondary); }
   .brand-tile-list .row { display: flex; justify-content: space-between; }
@@ -134,15 +122,28 @@
   .top10-fill { background: var(--accent); height: 100%; border-radius: 4px; }
   .top10-count { color: var(--ink-muted); text-align: right; }
 
-  .brand-block { border-top: 1px solid var(--gridline); padding: 20px 0; }
-  .brand-block:first-child { border-top: none; padding-top: 0; }
-  .brand-block-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-  .brand-block-head h3 { font-size: 17px; font-weight: 700; }
-  .brand-block-head .sub { font-size: 12.5px; color: var(--ink-muted); }
+  /* filter bar */
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; align-items: center; }
+  .filter-bar select, .filter-bar input[type="text"] { padding: 7px 10px; border-radius: 7px; border: 1px solid var(--border); background: var(--card); color: var(--ink); font-size: 12.5px; font-family: inherit; }
+  .filter-bar input[type="text"] { width: 150px; }
+
+  /* brand grid (logo-dominant) */
+  .brand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .brand-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0; text-align: left; overflow: hidden; display: flex; flex-direction: column; }
+  .brand-card .logo-plate { background: var(--logo-plate); aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center; padding: 14px; position: relative; }
+  .brand-card .logo-plate img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .brand-card .logo-plate .placeholder { font-size: 26px; color: var(--ink-muted); }
+  .brand-card .logo-plate .star-btn { position: absolute; top: 4px; right: 4px; background: var(--card); border-radius: 50%; }
+  .brand-card .info { padding: 10px 12px 12px; }
+  .brand-card .name { font-size: 14px; font-weight: 700; }
+  .brand-card .sub { font-size: 11.5px; color: var(--ink-muted); margin-top: 2px; }
+
+  .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-size: 13px; }
+  .breadcrumb .brand-title { display: flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 700; margin-left: 4px; }
+  .breadcrumb .brand-title img { height: 24px; }
 
   .model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
   .model-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: left; }
-  .model-card .photo-wrap { position: relative; }
   .model-card img, .model-card .placeholder { width: 100%; aspect-ratio: 1; border-radius: 7px; object-fit: cover; background: var(--plane); border: none; }
   .model-card button.photo-btn { padding: 0; border: none; background: none; width: 100%; display: block; }
   .model-card .placeholder { display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--ink-muted); }
@@ -152,16 +153,16 @@
   .model-card .star-row .star-btn { background: var(--card); border-radius: 50%; }
 
   .drilldown { grid-column: 1 / -1; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-top: -2px; }
-  .drilldown-bars { display: flex; align-items: flex-end; gap: 6px; height: 90px; margin-bottom: 14px; }
-  .drilldown-bars .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 20px; }
-  .drilldown-bars .bar { width: 100%; border-radius: 3px 3px 1px 1px; }
-  .drilldown-bars .bar-price { font-size: 10.5px; color: var(--ink-secondary); }
-  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-secondary); margin-bottom: 12px; }
+  .drilldown-chart .axis-plot { height: 110px; }
+  .drilldown-chart .bars { align-items: flex-end; }
+  .drilldown-chart .bar-price { position: absolute; bottom: 100%; left: 0; right: 0; text-align: center; font-size: 10px; color: var(--ink-secondary); margin-bottom: 3px; }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-secondary); margin: 14px 0 12px; }
   .legend .item { display: flex; align-items: center; gap: 5px; }
   .ref-list { display: flex; flex-direction: column; gap: 6px; }
   .ref-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; padding: 6px 8px; border-radius: 6px; }
   .ref-row:nth-child(odd) { background: var(--plane); }
   .ref-row .ref { font-weight: 600; min-width: 90px; }
+  .ref-row .nickname { color: var(--star-on); font-weight: 600; }
   .ref-row .plat { color: var(--ink-secondary); flex: 1; }
   .ref-row .price { font-weight: 600; }
   .ref-row a { font-size: 11.5px; }
@@ -182,7 +183,6 @@
   .modal input { padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--plane); color: var(--ink); font-size: 13px; font-family: inherit; }
   .modal .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
   [hidden] { display: none !important; }
-  @media (prefers-reduced-motion: no-preference) { .model-card, .tile { transition: border-color 0.15s ease; } }
 </style>
 
 <div class="app">
@@ -212,12 +212,13 @@
   </div>
 
   <div class="panel" data-panel="brands">
-    <div id="brandBlocks"></div>
+    <div id="brandsRoot"></div>
   </div>
 
   <div class="panel" data-panel="table">
+    <div class="filter-bar" id="tableFilterBar"></div>
     <div class="search-row">
-      <input type="text" id="tableSearch" placeholder="Suchen (Marke, Modell, Referenz, Shop …)">
+      <input type="text" id="tableSearch" placeholder="Freitextsuche (zusätzlich zu den Filtern oben)">
     </div>
     <div class="table-wrap">
       <table id="dataTable">
@@ -225,6 +226,7 @@
           <th data-key="brand">Marke</th>
           <th data-key="model_line">Modell</th>
           <th data-key="reference_number">Referenz</th>
+          <th data-key="nickname">Spitzname</th>
           <th data-key="price">Preis</th>
           <th data-key="platform">Shop</th>
           <th data-key="condition">Zustand</th>
@@ -261,6 +263,9 @@ const PLATFORM_COLOR_VAR = { grimmeissen: "--p-grimmeissen", rothfuss: "--p-roth
 
 let favorites = [];
 let db = null;
+let brandsView = { mode: "grid", brand: null }; // mode: "grid" | "detail"
+let brandsFilter = { brand: "", model_line: "", nickname: "", reference: "" };
+let tableFilter = { brand: "", model_line: "", nickname: "" };
 
 document.getElementById("generatedAt").textContent = DATA.generated_at;
 
@@ -276,13 +281,43 @@ function findModelLine(brand, modelLine) {
 function matchingListings(fav) {
   const m = findModelLine(fav.brand, fav.model_line);
   if (!m) return [];
-  if (fav.reference_number) {
-    return m.listings.filter(l => l.reference_number === fav.reference_number);
-  }
+  if (fav.reference_number) return m.listings.filter(l => l.reference_number === fav.reference_number);
   return m.listings;
 }
 
-// ---------- rendering: tabs ----------
+// ---------- nice axis step ----------
+function niceStep(maxValue) {
+  const steps = [100, 250, 500, 1000, 2000, 2500, 5000, 10000, 25000, 50000, 100000, 250000];
+  for (const s of steps) {
+    if (maxValue / s <= 6) return s;
+  }
+  return steps[steps.length - 1];
+}
+
+function renderAxisChart(items, opts) {
+  // items: [{price, colorVar, label, title}]
+  const prices = items.map(i => i.price).filter(p => p != null);
+  if (!prices.length) return `<div class="empty-state" style="padding:10px; font-size:12px;">Keine Preisdaten</div>`;
+  const max = Math.max(...prices);
+  const step = niceStep(max);
+  const axisMax = Math.ceil(max / step) * step;
+  const ticks = [];
+  for (let v = 0; v <= axisMax; v += step) ticks.push(v);
+  const height = opts.height || 44;
+  const gridlinesHtml = ticks.map(t => `<div class="gridline" style="bottom:${t / axisMax * 100}%"></div>`).join("");
+  const barsHtml = items.map(it => it.price == null ? "" : `
+    <div class="bar" style="height:${Math.max(6, it.price / axisMax * height)}px; background:var(${it.colorVar})" title="${it.title}">
+      ${opts.showPriceLabel ? `<div class="bar-price num">${fmtPrice(it.price)}</div>` : ""}
+    </div>`).join("");
+  const labelsHtml = ticks.slice().reverse().map(t => `<div>${new Intl.NumberFormat("de-DE", {notation:"compact"}).format(t)}</div>`).join("");
+  return `
+    <div class="axis-chart" style="height:${height}px;">
+      <div class="axis-labels">${labelsHtml}</div>
+      <div class="axis-plot">${gridlinesHtml}<div class="bars">${barsHtml}</div></div>
+    </div>`;
+}
+
+// ---------- tabs ----------
 document.querySelectorAll(".tab").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", "false"));
@@ -300,8 +335,8 @@ function renderFavoriteTile(fav) {
 
   if (isBrand) {
     const b = DATA.brands.find(x => x.brand === fav.brand);
-    const photoHtml = fav.image_url
-      ? `<img class="tile-photo" src="${fav.image_url}" alt="">`
+    const photoHtml = b && b.logo
+      ? `<img class="tile-photo" style="object-fit:contain; background:var(--logo-plate); padding:4px;" src="${b.logo}" alt="">`
       : `<div class="tile-photo placeholder">★</div>`;
     div.innerHTML = `
       <div class="tile-head">
@@ -327,14 +362,13 @@ function renderFavoriteTile(fav) {
     const prices = listings.map(l => l.price).filter(p => p != null);
     const avg = prices.length ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length) : null;
     const byPlatform = {};
-    listings.forEach(l => {
-      if (l.price == null) return;
-      if (!byPlatform[l.platform] || l.price < byPlatform[l.platform]) byPlatform[l.platform] = l.price;
-    });
+    listings.forEach(l => { if (l.price != null && (!byPlatform[l.platform] || l.price < byPlatform[l.platform])) byPlatform[l.platform] = l.price; });
     const m = findModelLine(fav.brand, fav.model_line);
     const photo = fav.image_url || (m && m.image_url);
     const photoHtml = photo ? `<img class="tile-photo" src="${photo}" alt="">` : `<div class="tile-photo placeholder">★</div>`;
-    const maxBar = Math.max(1, ...prices);
+    const refStat = m && fav.reference_number ? m.ref_stats[fav.reference_number] : null;
+    const lineStat = m ? { sold_count: m.sold_count, avg_days_to_sell: m.avg_days_to_sell } : null;
+    const stat = refStat || lineStat;
 
     div.innerHTML = `
       <div class="tile-head">
@@ -349,7 +383,7 @@ function renderFavoriteTile(fav) {
       <div class="tile-stats">
         <div class="stat"><div class="label">Ø Preis</div><div class="value num">${avg != null ? fmtPrice(avg) : "–"}</div></div>
         <div class="stat"><div class="label">Verweildauer</div><div class="value num muted">${
-          m && m.avg_days_to_sell != null ? m.avg_days_to_sell + " Tage (Ø)" : "noch keine Daten"
+          stat && stat.avg_days_to_sell != null ? stat.avg_days_to_sell + " Tage (Ø, n=" + stat.sold_count + ")" : "noch keine Daten"
         }</div></div>
       </div>
       <div class="portal-rows">
@@ -361,9 +395,7 @@ function renderFavoriteTile(fav) {
           </div>`;
         }).join("")}
       </div>
-      ${prices.length ? `<div class="bars">
-        ${listings.filter(l => l.price != null).map(l => `<div class="bar" style="height:${Math.max(8, l.price / maxBar * 44)}px; background:var(${PLATFORM_COLOR_VAR[l.platform]})" title="${PLATFORM_LABEL[l.platform]}: ${fmtPrice(l.price)}"></div>`).join("")}
-      </div>` : ""}
+      ${renderAxisChart(listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${PLATFORM_LABEL[l.platform]}: ${fmtPrice(l.price)}` })), { height: 44 })}
     `;
   }
   return div;
@@ -376,9 +408,7 @@ function renderFavorites() {
   if (!favorites.length) { empty.hidden = false; grid.hidden = true; return; }
   empty.hidden = true; grid.hidden = false;
   favorites.forEach(fav => grid.appendChild(renderFavoriteTile(fav)));
-  grid.querySelectorAll("[data-remove]").forEach(btn => {
-    btn.addEventListener("click", () => removeFavorite(btn.dataset.remove));
-  });
+  grid.querySelectorAll("[data-remove]").forEach(btn => btn.addEventListener("click", () => removeFavorite(btn.dataset.remove)));
 }
 
 function renderTop10() {
@@ -393,58 +423,144 @@ function renderTop10() {
   `).join("");
 }
 
-// ---------- brands tab ----------
-let openDrilldown = null;
+// ---------- shared filter bar ----------
+function allNicknames(brand, modelLine) {
+  const set = new Set();
+  DATA.model_lines
+    .filter(m => (!brand || m.brand === brand) && (!modelLine || m.model_line === modelLine))
+    .forEach(m => m.listings.forEach(l => { if (l.nickname) set.add(l.nickname); }));
+  return [...set].sort();
+}
 
-function renderBrandBlocks() {
-  const el = document.getElementById("brandBlocks");
-  el.innerHTML = DATA.brands.map(b => {
+function renderFilterBar(container, state, onChange, opts) {
+  opts = opts || {};
+  const lockedBrand = opts.lockedBrand || null;
+  const effectiveBrand = lockedBrand || state.brand;
+  const brands = [...new Set(DATA.model_lines.map(m => m.brand))].sort();
+  const modelLines = [...new Set(DATA.model_lines.filter(m => !effectiveBrand || m.brand === effectiveBrand).map(m => m.model_line))].sort();
+  const nicknames = allNicknames(effectiveBrand, state.model_line);
+  const activeFilterCount = (state.model_line ? 1 : 0) + (state.nickname ? 1 : 0) + (state.reference ? 1 : 0) + (!lockedBrand && state.brand ? 1 : 0);
+  container.innerHTML = `
+    ${lockedBrand ? "" : `<select data-f="brand"><option value="">Alle Marken</option>${brands.map(b => `<option value="${b}" ${state.brand===b?"selected":""}>${b}</option>`).join("")}</select>`}
+    <select data-f="model_line"><option value="">Alle Modellreihen</option>${modelLines.map(m => `<option value="${m}" ${state.model_line===m?"selected":""}>${m}</option>`).join("")}</select>
+    <select data-f="nickname"><option value="">Alle Spitznamen</option>${nicknames.map(n => `<option value="${n}" ${state.nickname===n?"selected":""}>${n}</option>`).join("")}</select>
+    ${opts.reference !== false ? `<input type="text" data-f="reference" placeholder="Referenznummer" value="${state.reference || ""}">` : ""}
+    ${activeFilterCount ? `<button class="btn ghost" data-f="clear">Filter zurücksetzen ✕</button>` : ""}
+  `;
+  container.querySelectorAll("select[data-f], input[data-f]").forEach(el => {
+    el.addEventListener("change", () => { state[el.dataset.f] = el.value; onChange(); });
+    if (el.tagName === "INPUT") el.addEventListener("input", () => { state[el.dataset.f] = el.value; onChange(); });
+  });
+  const clearBtn = container.querySelector("[data-f='clear']");
+  if (clearBtn) clearBtn.addEventListener("click", () => { Object.keys(state).forEach(k => state[k] = ""); onChange(); });
+}
+
+function modelLineMatchesFilter(m, state) {
+  if (state.brand && m.brand !== state.brand) return false;
+  if (state.model_line && m.model_line !== state.model_line) return false;
+  if (state.nickname && !m.listings.some(l => l.nickname === state.nickname)) return false;
+  if (state.reference && !m.listings.some(l => (l.reference_number || "").toLowerCase().includes(state.reference.toLowerCase()))) return false;
+  return true;
+}
+
+// ---------- brands tab ----------
+function renderBrandsRoot() {
+  const root = document.getElementById("brandsRoot");
+  if (brandsView.mode === "grid") renderBrandGrid(root);
+  else renderBrandDetail(root, brandsView.brand);
+}
+
+function renderBrandGrid(root) {
+  const filterState = brandsFilter;
+  const matchingLines = DATA.model_lines.filter(m => modelLineMatchesFilter(m, filterState));
+  const visibleBrands = filterState.brand || filterState.model_line || filterState.nickname || filterState.reference
+    ? new Set(matchingLines.map(m => m.brand))
+    : null;
+
+  root.innerHTML = `
+    <div class="filter-bar" id="brandsFilterBar"></div>
+    <div class="brand-grid" id="brandGrid"></div>
+  `;
+  renderFilterBar(document.getElementById("brandsFilterBar"), brandsFilter, () => renderBrandsRoot(), { reference: true });
+
+  const grid = document.getElementById("brandGrid");
+  const brandsToShow = DATA.brands.filter(b => !visibleBrands || visibleBrands.has(b.brand));
+  if (!brandsToShow.length) {
+    grid.innerHTML = `<div class="empty-state">Keine Marke passt zu diesen Filtern.</div>`;
+    return;
+  }
+  grid.innerHTML = brandsToShow.map(b => {
     const isFav = favorites.some(f => f.type === "brand" && f.brand === b.brand);
     return `
-    <div class="brand-block">
-      <div class="brand-block-head">
-        <button class="star-btn ${isFav ? "on" : ""}" data-brand-star="${b.brand}">★</button>
-        <h3>${b.brand}</h3>
-        <span class="sub">${b.active_count} aktive Angebote · ${fmtPrice(b.price_min)} – ${fmtPrice(b.price_max)}</span>
+    <div class="brand-card">
+      <button class="photo-btn" data-open-brand="${b.brand}" style="all:unset; cursor:pointer; display:block;">
+        <div class="logo-plate">
+          ${b.logo ? `<img src="${b.logo}" alt="${b.brand}">` : `<div class="placeholder">⌚</div>`}
+        </div>
+      </button>
+      <button class="star-btn ${isFav ? "on" : ""}" data-brand-star="${b.brand}" style="position:absolute;"></button>
+      <div class="info">
+        <div class="name">${b.brand}</div>
+        <div class="sub">${b.active_count} aktiv · ${fmtPrice(b.price_min)}–${fmtPrice(b.price_max)}</div>
       </div>
-      <div class="model-grid" data-brand-grid="${b.brand}"></div>
     </div>`;
   }).join("");
+  // fix: star button needs to sit inside the logo-plate wrapper for positioning
+  grid.querySelectorAll(".brand-card").forEach(card => {
+    const star = card.querySelector("[data-brand-star]");
+    card.querySelector(".logo-plate").appendChild(star);
+  });
+  grid.querySelectorAll("[data-open-brand]").forEach(btn => btn.addEventListener("click", () => { brandsView = { mode: "detail", brand: btn.dataset.openBrand }; renderBrandsRoot(); }));
+  grid.querySelectorAll("[data-brand-star]").forEach(btn => btn.addEventListener("click", (e) => { e.stopPropagation(); toggleBrandFavorite(btn.dataset.brandStar); }));
+}
 
-  DATA.brands.forEach(b => {
-    const grid = el.querySelector(`[data-brand-grid="${CSS.escape(b.brand)}"]`);
-    const models = DATA.model_lines.filter(m => m.brand === b.brand).sort((a, c) => c.count - a.count);
-    models.forEach(m => {
-      const card = document.createElement("div");
-      card.className = "model-card";
-      const isFav = favorites.some(f => f.type === "model" && f.brand === m.brand && f.model_line === m.model_line && !f.reference_number);
-      card.innerHTML = `
-        <button class="photo-btn" data-open="${m.brand}|||${m.model_line}">
-          ${m.image_url ? `<img src="${m.image_url}" alt="">` : `<div class="placeholder">⌚</div>`}
-        </button>
-        <div class="star-row"><button class="star-btn ${isFav ? "on" : ""}" data-model-star="${m.brand}|||${m.model_line}">★</button></div>
-        <div class="name">${m.model_line}</div>
-        <div class="count num">${m.count} aktiv</div>
-      `;
-      grid.appendChild(card);
-    });
-  });
+let openDrilldown = null;
 
-  el.querySelectorAll("[data-brand-star]").forEach(btn => {
-    btn.addEventListener("click", () => toggleBrandFavorite(btn.dataset.brandStar));
+function renderBrandDetail(root, brand) {
+  const b = DATA.brands.find(x => x.brand === brand);
+  const isFav = favorites.some(f => f.type === "brand" && f.brand === brand);
+  root.innerHTML = `
+    <div class="breadcrumb">
+      <button class="btn ghost" id="backToBrands">← Marken</button>
+      <div class="brand-title">
+        ${b && b.logo ? `<img src="${b.logo}" alt="">` : ""}
+        ${brand}
+        <button class="star-btn ${isFav ? "on" : ""}" data-brand-star="${brand}">★</button>
+      </div>
+    </div>
+    <div class="filter-bar" id="brandDetailFilterBar"></div>
+    <div class="model-grid" id="brandDetailGrid"></div>
+  `;
+  document.getElementById("backToBrands").addEventListener("click", () => { brandsView = { mode: "grid", brand: null }; renderBrandsRoot(); });
+  root.querySelector("[data-brand-star]").addEventListener("click", () => toggleBrandFavorite(brand));
+
+  const filterState = brandsFilter;
+  renderFilterBar(document.getElementById("brandDetailFilterBar"), filterState, () => renderBrandsRoot(), { reference: true, lockedBrand: brand });
+
+  const grid = document.getElementById("brandDetailGrid");
+  const models = DATA.model_lines
+    .filter(m => m.brand === brand && modelLineMatchesFilter(m, { ...filterState, brand: "" }))
+    .sort((a, c) => c.count - a.count);
+  if (!models.length) {
+    grid.innerHTML = `<div class="empty-state">Keine Modelle passen zu diesen Filtern.</div>`;
+    return;
+  }
+  models.forEach(m => {
+    const card = document.createElement("div");
+    card.className = "model-card";
+    const isModelFav = favorites.some(f => f.type === "model" && f.brand === m.brand && f.model_line === m.model_line && !f.reference_number);
+    card.innerHTML = `
+      <button class="photo-btn" data-open="${m.brand}|||${m.model_line}">
+        ${m.image_url ? `<img src="${m.image_url}" alt="">` : `<div class="placeholder">⌚</div>`}
+      </button>
+      <div class="star-row"><button class="star-btn ${isModelFav ? "on" : ""}" data-model-star="${m.brand}|||${m.model_line}">★</button></div>
+      <div class="name">${m.model_line}</div>
+      <div class="count num">${m.count} aktiv</div>
+    `;
+    grid.appendChild(card);
   });
-  el.querySelectorAll("[data-model-star]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const [brand, modelLine] = btn.dataset.modelStar.split("|||");
-      toggleModelFavorite(brand, modelLine, null);
-    });
-  });
-  el.querySelectorAll("[data-open]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const [brand, modelLine] = btn.dataset.open.split("|||");
-      toggleDrilldown(brand, modelLine, btn.closest(".model-card"));
-    });
-  });
+  grid.querySelectorAll("[data-model-star]").forEach(btn => btn.addEventListener("click", () => { const [br, ml] = btn.dataset.modelStar.split("|||"); toggleModelFavorite(br, ml, null); }));
+  grid.querySelectorAll("[data-open]").forEach(btn => btn.addEventListener("click", () => { const [br, ml] = btn.dataset.open.split("|||"); toggleDrilldown(br, ml, btn.closest(".model-card")); }));
 }
 
 function toggleDrilldown(brand, modelLine, cardEl) {
@@ -454,8 +570,6 @@ function toggleDrilldown(brand, modelLine, cardEl) {
   openDrilldown = brand + "|||" + modelLine;
 
   const m = findModelLine(brand, modelLine);
-  const listings = m.listings.filter(l => l.price != null);
-  const maxPrice = Math.max(1, ...listings.map(l => l.price));
   const refs = {};
   m.listings.forEach(l => { const k = l.reference_number || "—"; (refs[k] = refs[k] || []).push(l); });
 
@@ -465,13 +579,8 @@ function toggleDrilldown(brand, modelLine, cardEl) {
     <div class="legend">
       ${["grimmeissen", "rothfuss", "cologne_watch"].map(p => `<span class="item"><span class="dot" style="background:var(${PLATFORM_COLOR_VAR[p]})"></span>${PLATFORM_LABEL[p]}</span>`).join("")}
     </div>
-    <div class="drilldown-bars">
-      ${listings.map(l => `
-        <div class="bar-wrap">
-          <div class="bar-price num">${fmtPrice(l.price)}</div>
-          <div class="bar" style="height:${Math.max(10, l.price / maxPrice * 70)}px; background:var(${PLATFORM_COLOR_VAR[l.platform]})"></div>
-        </div>
-      `).join("")}
+    <div class="drilldown-chart">
+      ${renderAxisChart(m.listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${l.reference_number || ""} ${PLATFORM_LABEL[l.platform]}` })), { height: 90, showPriceLabel: true })}
     </div>
     <div class="ref-list">
       ${Object.entries(refs).map(([ref, items]) => {
@@ -480,6 +589,7 @@ function toggleDrilldown(brand, modelLine, cardEl) {
           <div class="ref-row">
             ${ref !== "—" ? `<button class="star-btn ${isFav ? "on" : ""}" data-ref-star="${brand}|||${modelLine}|||${ref}">★</button>` : `<span style="width:22px;"></span>`}
             <span class="ref num">${ref}</span>
+            ${l.nickname ? `<span class="nickname">${l.nickname}</span>` : ""}
             <span class="plat">${PLATFORM_LABEL[l.platform]}${l.condition ? " · " + l.condition : ""}${l.dial_color ? " · " + l.dial_color : ""}</span>
             <span class="price num">${fmtPrice(l.price)}</span>
             <a href="${l.url}" target="_blank" rel="noopener">Angebot ↗</a>
@@ -489,12 +599,7 @@ function toggleDrilldown(brand, modelLine, cardEl) {
     </div>
   `;
   cardEl.closest(".model-grid").appendChild(div);
-  div.querySelectorAll("[data-ref-star]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const [b, ml, ref] = btn.dataset.refStar.split("|||");
-      toggleModelFavorite(b, ml, ref);
-    });
-  });
+  div.querySelectorAll("[data-ref-star]").forEach(btn => btn.addEventListener("click", () => { const [b, ml, ref] = btn.dataset.refStar.split("|||"); toggleModelFavorite(b, ml, ref); }));
 }
 
 // ---------- favorites persistence ----------
@@ -560,8 +665,15 @@ document.getElementById("fMSave").addEventListener("click", async () => {
 // ---------- table tab ----------
 let tableSort = { key: "brand", dir: 1 };
 function renderTable() {
+  renderFilterBar(document.getElementById("tableFilterBar"), tableFilter, renderTable, { reference: false });
   const q = document.getElementById("tableSearch").value.toLowerCase();
-  let rows = DATA.table.filter(r => !q || Object.values(r).some(v => String(v || "").toLowerCase().includes(q)));
+  let rows = DATA.table.filter(r => {
+    if (tableFilter.brand && r.brand !== tableFilter.brand) return false;
+    if (tableFilter.model_line && r.model_line !== tableFilter.model_line) return false;
+    if (tableFilter.nickname && r.nickname !== tableFilter.nickname) return false;
+    if (q && !Object.values(r).some(v => String(v || "").toLowerCase().includes(q))) return false;
+    return true;
+  });
   rows = rows.slice().sort((a, b) => {
     const av = a[tableSort.key], bv = b[tableSort.key];
     if (av == null) return 1; if (bv == null) return -1;
@@ -572,6 +684,7 @@ function renderTable() {
       <td>${r.brand}</td>
       <td>${r.model_line}</td>
       <td class="num">${r.reference_number || "–"}</td>
+      <td>${r.nickname || "–"}</td>
       <td class="num">${fmtPrice(r.price, r.currency)}</td>
       <td>${PLATFORM_LABEL[r.platform] || r.platform}</td>
       <td>${r.condition || "–"}</td>
@@ -593,7 +706,7 @@ document.querySelectorAll("#dataTable th").forEach(th => {
 function renderAll() {
   renderFavorites();
   renderTop10();
-  renderBrandBlocks();
+  renderBrandsRoot();
   renderTable();
 }
 

@@ -1,18 +1,36 @@
 """Exports watches.db into the JSON shape the dashboard artifact embeds.
-Run this, then paste dashboard_data.json's content into the artifact's DATA block."""
+Run this, then build_dashboard.py to produce the publishable dashboard.html."""
 import json
 from collections import defaultdict
 from datetime import date
+from pathlib import Path
 
 from db import connect
+
+THUMBNAIL_CACHE = Path("thumbnails_cache.json")
+MODEL_VARIANTS = Path("model_variants.json")
+BRAND_LOGOS = Path("brand_logos.json")
 
 
 def _days_between(a: str, b: str) -> int:
     return (date.fromisoformat(b) - date.fromisoformat(a)).days
 
 
+def _stats(days: list[int]) -> dict:
+    return {
+        "sold_count": len(days),
+        "avg_days_to_sell": round(sum(days) / len(days)) if days else None,
+    }
+
+
 def build():
     conn = connect()
+    thumbnails = json.loads(THUMBNAIL_CACHE.read_text()) if THUMBNAIL_CACHE.exists() else {}
+    nicknames = defaultdict(list)
+    if MODEL_VARIANTS.exists():
+        for v in json.loads(MODEL_VARIANTS.read_text()):
+            nicknames[(v["brand"], v["reference_number"])].append(v["nickname"])
+    nicknames = {k: " / ".join(dict.fromkeys(v)) for k, v in nicknames.items()}
 
     active = conn.execute("""
         SELECT l.brand, l.model_line, l.reference_number, p.price, p.currency, l.platform,
@@ -23,7 +41,7 @@ def build():
     """).fetchall()
 
     sold = conn.execute("""
-        SELECT brand, model_line, first_seen, last_seen
+        SELECT brand, model_line, reference_number, first_seen, last_seen
         FROM listings WHERE status = 'sold' AND brand IS NOT NULL AND model_line IS NOT NULL
     """).fetchall()
 
@@ -33,9 +51,13 @@ def build():
         GROUP BY brand, model_line
     """).fetchall()
 
-    sold_days = defaultdict(list)
-    for brand, model_line, first_seen, last_seen in sold:
-        sold_days[(brand, model_line)].append(_days_between(first_seen, last_seen))
+    sold_days_by_line = defaultdict(list)
+    sold_days_by_ref = defaultdict(list)
+    for brand, model_line, ref, first_seen, last_seen in sold:
+        days = _days_between(first_seen, last_seen)
+        sold_days_by_line[(brand, model_line)].append(days)
+        if ref:
+            sold_days_by_ref[(brand, model_line, ref)].append(days)
 
     grouped = defaultdict(list)
     for row in active:
@@ -44,13 +66,19 @@ def build():
         grouped[(brand, model_line)].append({
             "reference_number": ref, "price": price, "currency": currency,
             "platform": platform, "condition": condition, "year": year,
-            "band_material": band, "dial_color": dial, "image_url": image, "url": url,
+            "band_material": band, "dial_color": dial,
+            "image_url": thumbnails.get(image, image), "url": url,
+            "nickname": nicknames.get((brand, ref)),
         })
 
     model_lines = []
     for (brand, model_line), listings in grouped.items():
-        days = sold_days.get((brand, model_line), [])
         prices = [item["price"] for item in listings if item["price"] is not None]
+        ref_stats = {
+            ref: _stats(days)
+            for (b, ml, ref), days in sold_days_by_ref.items()
+            if b == brand and ml == model_line
+        }
         model_lines.append({
             "brand": brand,
             "model_line": model_line,
@@ -58,8 +86,8 @@ def build():
             "price_min": min(prices) if prices else None,
             "price_max": max(prices) if prices else None,
             "image_url": next((item["image_url"] for item in listings if item["image_url"]), None),
-            "sold_count": len(days),
-            "avg_days_to_sell": round(sum(days) / len(days)) if days else None,
+            **_stats(sold_days_by_line.get((brand, model_line), [])),
+            "ref_stats": ref_stats,
             "listings": listings,
         })
     model_lines.sort(key=lambda m: (m["brand"], m["model_line"]))
@@ -74,6 +102,7 @@ def build():
             b["prices"].append(m["price_max"])
         b["model_lines"].append({"model_line": m["model_line"], "count": m["count"]})
 
+    logos = json.loads(BRAND_LOGOS.read_text()) if BRAND_LOGOS.exists() else {}
     brand_list = [
         {
             "brand": brand,
@@ -81,6 +110,7 @@ def build():
             "price_min": min(data["prices"]) if data["prices"] else None,
             "price_max": max(data["prices"]) if data["prices"] else None,
             "model_lines": sorted(data["model_lines"], key=lambda x: -x["count"]),
+            "logo": logos.get(brand),
         }
         for brand, data in brands.items()
     ]
@@ -94,7 +124,8 @@ def build():
     table = [
         {
             "brand": m["brand"], "model_line": m["model_line"],
-            "reference_number": item["reference_number"], "price": item["price"],
+            "reference_number": item["reference_number"], "nickname": item["nickname"],
+            "price": item["price"],
             "currency": item["currency"], "platform": item["platform"],
             "condition": item["condition"], "year": item["year"],
             "band_material": item["band_material"], "dial_color": item["dial_color"],
