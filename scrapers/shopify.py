@@ -1,6 +1,7 @@
 """Shared scraper for Shopify shops exposing /collections/{handle}/products.json."""
 import re
 
+from .brand_resolver import resolve_brand
 from .http import fetch_json
 from .model_line import extract_model_line
 from .reference import extract_reference_number
@@ -10,7 +11,7 @@ PAGE_LIMIT = 250
 _TAG_STRIP = re.compile(r"<[^>]+>")
 
 
-def scrape_shopify_collection(base_url: str, collection_handle: str, seller: str) -> list[dict]:
+def scrape_shopify_collection(base_url: str, collection_handle: str, seller: str, shop_display_name: str) -> list[dict]:
     items = []
     page = 1
     while True:
@@ -25,7 +26,7 @@ def scrape_shopify_collection(base_url: str, collection_handle: str, seller: str
             if not variant.get("available", True):
                 continue
             title = product.get("title", "")
-            brand = product.get("vendor")
+            brand = resolve_brand(product.get("vendor"), shop_display_name, title)
             description = _TAG_STRIP.sub(" ", product.get("body_html", ""))
             specs = extract_specs(f"{title} {description}")
             images = product.get("images") or []
