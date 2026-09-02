@@ -27,11 +27,16 @@ MODEL_LINES = {
 }
 
 
+def _normalize(text: str) -> str:
+    return text.lower().replace("-", " ").replace("~", " ")
+
+
 def extract_model_line(brand: str, title: str) -> str:
     """Returns a known model line if found, otherwise the title with the brand prefix stripped."""
     candidates = MODEL_LINES.get((brand or "").strip().lower(), [])
+    normalized_title = _normalize(title)
     for line in sorted(candidates, key=len, reverse=True):
-        if line.lower() in title.lower():
+        if _normalize(line) in normalized_title:
             return line
 
     fallback = title
