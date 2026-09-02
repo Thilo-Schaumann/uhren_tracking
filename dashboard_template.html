@@ -1,0 +1,605 @@
+<title>Zeitmarkt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --surface: #fcfcfb;
+    --plane: #f9f9f7;
+    --card: #ffffff;
+    --ink: #0b0b0b;
+    --ink-secondary: #52514e;
+    --ink-muted: #898781;
+    --gridline: #e1e0d9;
+    --border: rgba(11,11,11,0.10);
+    --accent: #2a78d6;
+    --accent-ink: #ffffff;
+    --star-off: #c3c2b7;
+    --star-on: #eda100;
+    --good: #0ca30c;
+    --p-grimmeissen: #2a78d6;
+    --p-rothfuss: #eb6834;
+    --p-cologne: #1baf7a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface: #1a1a19;
+      --plane: #0d0d0d;
+      --card: #232322;
+      --ink: #ffffff;
+      --ink-secondary: #c3c2b7;
+      --ink-muted: #898781;
+      --gridline: #2c2c2a;
+      --border: rgba(255,255,255,0.10);
+      --accent: #3987e5;
+      --accent-ink: #ffffff;
+      --star-off: #52514e;
+      --star-on: #c98500;
+      --good: #0ca30c;
+      --p-grimmeissen: #3987e5;
+      --p-rothfuss: #d95926;
+      --p-cologne: #199e70;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface: #1a1a19;
+    --plane: #0d0d0d;
+    --card: #232322;
+    --ink: #ffffff;
+    --ink-secondary: #c3c2b7;
+    --ink-muted: #898781;
+    --gridline: #2c2c2a;
+    --border: rgba(255,255,255,0.10);
+    --accent: #3987e5;
+    --accent-ink: #ffffff;
+    --star-off: #52514e;
+    --star-on: #c98500;
+    --good: #0ca30c;
+    --p-grimmeissen: #3987e5;
+    --p-rothfuss: #d95926;
+    --p-cologne: #199e70;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--plane); color: var(--ink); font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif; }
+  .num { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  a { color: var(--accent); }
+  button { font-family: inherit; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .app { max-width: 1180px; margin: 0 auto; padding: 20px 20px 64px; }
+
+  .topbar { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+  .topbar h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+  .topbar .meta { font-size: 12px; color: var(--ink-muted); }
+
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--gridline); margin-bottom: 24px; }
+  .tab { padding: 10px 14px; font-size: 14px; font-weight: 600; color: var(--ink-secondary); background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  .tab:hover { color: var(--ink); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-muted); margin: 32px 0 12px; }
+  .section-title:first-child { margin-top: 0; }
+
+  .star-btn { background: none; border: none; padding: 2px; font-size: 18px; line-height: 1; color: var(--star-off); }
+  .star-btn.on { color: var(--star-on); }
+  .star-btn:hover { color: var(--star-on); }
+
+  .empty-state { border: 1px dashed var(--gridline); border-radius: 10px; padding: 28px; text-align: center; color: var(--ink-secondary); font-size: 14px; }
+  .empty-state button { margin-top: 12px; }
+
+  .btn { background: var(--accent); color: var(--accent-ink); border: none; border-radius: 7px; padding: 8px 14px; font-size: 13px; font-weight: 600; }
+  .btn.secondary { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+
+  .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+
+  .tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .tile-head { display: flex; gap: 10px; align-items: flex-start; }
+  .tile-photo { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; background: var(--plane); flex-shrink: 0; }
+  .tile-photo.placeholder { display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--ink-muted); }
+  .tile-title { flex: 1; min-width: 0; }
+  .tile-title .brand { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+  .tile-title .model { font-size: 15px; font-weight: 600; line-height: 1.25; }
+  .tile-title .ref { font-size: 12px; color: var(--ink-secondary); }
+
+  .tile-stats { display: flex; gap: 18px; }
+  .stat .label { font-size: 11px; color: var(--ink-muted); }
+  .stat .value { font-size: 17px; font-weight: 600; }
+  .stat .value.muted { font-size: 13px; font-weight: 500; color: var(--ink-muted); }
+
+  .portal-rows { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; }
+  .portal-row { display: flex; justify-content: space-between; }
+  .portal-row .name { display: flex; align-items: center; gap: 6px; color: var(--ink-secondary); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .portal-row .val { color: var(--ink); }
+  .portal-row.unavailable .val { color: var(--ink-muted); }
+
+  .bars { display: flex; align-items: flex-end; gap: 3px; height: 44px; }
+  .bar { flex: 1; border-radius: 3px 3px 1px 1px; min-width: 4px; }
+
+  .brand-tile-list { display: flex; flex-direction: column; gap: 3px; font-size: 12.5px; color: var(--ink-secondary); }
+  .brand-tile-list .row { display: flex; justify-content: space-between; }
+
+  .top10 { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+  .top10-row { display: grid; grid-template-columns: 200px 1fr 34px; align-items: center; gap: 10px; font-size: 13px; }
+  .top10-label { color: var(--ink-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .top10-track { background: var(--gridline); border-radius: 4px; height: 16px; overflow: hidden; }
+  .top10-fill { background: var(--accent); height: 100%; border-radius: 4px; }
+  .top10-count { color: var(--ink-muted); text-align: right; }
+
+  .brand-block { border-top: 1px solid var(--gridline); padding: 20px 0; }
+  .brand-block:first-child { border-top: none; padding-top: 0; }
+  .brand-block-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .brand-block-head h3 { font-size: 17px; font-weight: 700; }
+  .brand-block-head .sub { font-size: 12.5px; color: var(--ink-muted); }
+
+  .model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .model-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: left; }
+  .model-card .photo-wrap { position: relative; }
+  .model-card img, .model-card .placeholder { width: 100%; aspect-ratio: 1; border-radius: 7px; object-fit: cover; background: var(--plane); border: none; }
+  .model-card button.photo-btn { padding: 0; border: none; background: none; width: 100%; display: block; }
+  .model-card .placeholder { display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--ink-muted); }
+  .model-card .name { font-size: 13px; font-weight: 600; margin-top: 8px; line-height: 1.25; }
+  .model-card .count { font-size: 11.5px; color: var(--ink-muted); }
+  .model-card .star-row { display: flex; justify-content: flex-end; margin-top: -30px; margin-right: -2px; position: relative; z-index: 1; }
+  .model-card .star-row .star-btn { background: var(--card); border-radius: 50%; }
+
+  .drilldown { grid-column: 1 / -1; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-top: -2px; }
+  .drilldown-bars { display: flex; align-items: flex-end; gap: 6px; height: 90px; margin-bottom: 14px; }
+  .drilldown-bars .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 20px; }
+  .drilldown-bars .bar { width: 100%; border-radius: 3px 3px 1px 1px; }
+  .drilldown-bars .bar-price { font-size: 10.5px; color: var(--ink-secondary); }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-secondary); margin-bottom: 12px; }
+  .legend .item { display: flex; align-items: center; gap: 5px; }
+  .ref-list { display: flex; flex-direction: column; gap: 6px; }
+  .ref-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; padding: 6px 8px; border-radius: 6px; }
+  .ref-row:nth-child(odd) { background: var(--plane); }
+  .ref-row .ref { font-weight: 600; min-width: 90px; }
+  .ref-row .plat { color: var(--ink-secondary); flex: 1; }
+  .ref-row .price { font-weight: 600; }
+  .ref-row a { font-size: 11.5px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--gridline); white-space: nowrap; }
+  th { position: sticky; top: 0; background: var(--card); font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-muted); cursor: pointer; user-select: none; }
+  th:hover { color: var(--ink); }
+  tbody tr:hover { background: var(--plane); }
+  .search-row { margin-bottom: 12px; }
+  .search-row input { width: 100%; max-width: 340px; padding: 8px 12px; border-radius: 7px; border: 1px solid var(--border); background: var(--card); color: var(--ink); font-size: 13px; }
+
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
+  .modal { background: var(--card); border-radius: 12px; padding: 22px; width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 12px; }
+  .modal h3 { font-size: 16px; }
+  .modal label { font-size: 12.5px; color: var(--ink-secondary); display: flex; flex-direction: column; gap: 4px; }
+  .modal input { padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--plane); color: var(--ink); font-size: 13px; font-family: inherit; }
+  .modal .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+  [hidden] { display: none !important; }
+  @media (prefers-reduced-motion: no-preference) { .model-card, .tile { transition: border-color 0.15s ease; } }
+</style>
+
+<div class="app">
+  <div class="topbar">
+    <h1>Zeitmarkt</h1>
+    <div class="meta">Daten vom <span id="generatedAt" class="num"></span> · Grimmeissen · Rothfuss · Cologne Watch</div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="favorites" aria-selected="true">Favoriten</button>
+    <button class="tab" role="tab" data-tab="brands" aria-selected="false">Marken</button>
+    <button class="tab" role="tab" data-tab="table" aria-selected="false">Tabelle</button>
+  </div>
+
+  <div class="panel active" data-panel="favorites">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="section-title" style="margin:0;">Favoriten</div>
+      <button class="btn secondary" id="addFavoriteBtn">+ Favorit hinzufügen</button>
+    </div>
+    <div id="favoritesGrid" class="tile-grid" style="margin-top:12px;"></div>
+    <div id="favoritesEmpty" class="empty-state" hidden>
+      Noch keine Favoriten. Setze Sterne auf dem "Marken"-Tab oder füge eine Uhr manuell hinzu, die aktuell nirgends gelistet ist.
+    </div>
+
+    <div class="section-title">Top 10 · am häufigsten angeboten/verkauft</div>
+    <div id="top10" class="top10"></div>
+  </div>
+
+  <div class="panel" data-panel="brands">
+    <div id="brandBlocks"></div>
+  </div>
+
+  <div class="panel" data-panel="table">
+    <div class="search-row">
+      <input type="text" id="tableSearch" placeholder="Suchen (Marke, Modell, Referenz, Shop …)">
+    </div>
+    <div class="table-wrap">
+      <table id="dataTable">
+        <thead><tr>
+          <th data-key="brand">Marke</th>
+          <th data-key="model_line">Modell</th>
+          <th data-key="reference_number">Referenz</th>
+          <th data-key="price">Preis</th>
+          <th data-key="platform">Shop</th>
+          <th data-key="condition">Zustand</th>
+          <th data-key="year">Jahr</th>
+          <th data-key="band_material">Band</th>
+          <th data-key="dial_color">Zifferblatt</th>
+        </tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="addModalBackdrop" hidden>
+  <div class="modal">
+    <h3>Favorit hinzufügen</h3>
+    <label>Marke <input id="fMBrand" type="text" placeholder="z.B. Rolex"></label>
+    <label>Modelllinie <input id="fMModelLine" type="text" placeholder="z.B. Submariner"></label>
+    <label>Referenznummer (optional) <input id="fMRef" type="text" placeholder="z.B. 16610LN"></label>
+    <label>Anzeigename <input id="fMName" type="text" placeholder="z.B. Rolex Submariner 16610LN Black"></label>
+    <label>Foto-URL (optional) <input id="fMImage" type="text" placeholder="https://…"></label>
+    <div class="actions">
+      <button class="btn secondary" id="fMCancel">Abbrechen</button>
+      <button class="btn" id="fMSave">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = __DASHBOARD_DATA__;
+
+const PLATFORM_LABEL = { grimmeissen: "Grimmeissen", rothfuss: "Rothfuss", cologne_watch: "Cologne Watch" };
+const PLATFORM_COLOR_VAR = { grimmeissen: "--p-grimmeissen", rothfuss: "--p-rothfuss", cologne_watch: "--p-cologne" };
+
+let favorites = [];
+let db = null;
+
+document.getElementById("generatedAt").textContent = DATA.generated_at;
+
+function fmtPrice(p, cur) {
+  if (p == null) return "–";
+  return new Intl.NumberFormat("de-DE", { maximumFractionDigits: 0 }).format(p) + " " + (cur || "EUR");
+}
+
+function findModelLine(brand, modelLine) {
+  return DATA.model_lines.find(m => m.brand === brand && m.model_line === modelLine);
+}
+
+function matchingListings(fav) {
+  const m = findModelLine(fav.brand, fav.model_line);
+  if (!m) return [];
+  if (fav.reference_number) {
+    return m.listings.filter(l => l.reference_number === fav.reference_number);
+  }
+  return m.listings;
+}
+
+// ---------- rendering: tabs ----------
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", "false"));
+    btn.setAttribute("aria-selected", "true");
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+    document.querySelector(`.panel[data-panel="${btn.dataset.tab}"]`).classList.add("active");
+  });
+});
+
+// ---------- favorites tab ----------
+function renderFavoriteTile(fav) {
+  const isBrand = fav.type === "brand";
+  const div = document.createElement("div");
+  div.className = "tile";
+
+  if (isBrand) {
+    const b = DATA.brands.find(x => x.brand === fav.brand);
+    const photoHtml = fav.image_url
+      ? `<img class="tile-photo" src="${fav.image_url}" alt="">`
+      : `<div class="tile-photo placeholder">★</div>`;
+    div.innerHTML = `
+      <div class="tile-head">
+        ${photoHtml}
+        <div class="tile-title">
+          <div class="brand">Marke</div>
+          <div class="model">${fav.brand}</div>
+        </div>
+        <button class="star-btn on" data-remove="${fav.id}">★</button>
+      </div>
+      ${b ? `
+        <div class="tile-stats">
+          <div class="stat"><div class="label">Aktive Angebote</div><div class="value num">${b.active_count}</div></div>
+          <div class="stat"><div class="label">Preisspanne</div><div class="value num muted">${fmtPrice(b.price_min)} – ${fmtPrice(b.price_max)}</div></div>
+        </div>
+        <div class="brand-tile-list">
+          ${b.model_lines.slice(0, 6).map(ml => `<div class="row"><span>${ml.model_line}</span><span class="num">${ml.count}</span></div>`).join("")}
+        </div>
+      ` : `<div class="empty-state" style="padding:14px;">Aktuell keine aktiven Angebote dieser Marke.</div>`}
+    `;
+  } else {
+    const listings = matchingListings(fav);
+    const prices = listings.map(l => l.price).filter(p => p != null);
+    const avg = prices.length ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length) : null;
+    const byPlatform = {};
+    listings.forEach(l => {
+      if (l.price == null) return;
+      if (!byPlatform[l.platform] || l.price < byPlatform[l.platform]) byPlatform[l.platform] = l.price;
+    });
+    const m = findModelLine(fav.brand, fav.model_line);
+    const photo = fav.image_url || (m && m.image_url);
+    const photoHtml = photo ? `<img class="tile-photo" src="${photo}" alt="">` : `<div class="tile-photo placeholder">★</div>`;
+    const maxBar = Math.max(1, ...prices);
+
+    div.innerHTML = `
+      <div class="tile-head">
+        ${photoHtml}
+        <div class="tile-title">
+          <div class="brand">${fav.brand}</div>
+          <div class="model">${fav.display_name || fav.model_line}</div>
+          ${fav.reference_number ? `<div class="ref num">Ref. ${fav.reference_number}</div>` : ""}
+        </div>
+        <button class="star-btn on" data-remove="${fav.id}">★</button>
+      </div>
+      <div class="tile-stats">
+        <div class="stat"><div class="label">Ø Preis</div><div class="value num">${avg != null ? fmtPrice(avg) : "–"}</div></div>
+        <div class="stat"><div class="label">Verweildauer</div><div class="value num muted">${
+          m && m.avg_days_to_sell != null ? m.avg_days_to_sell + " Tage (Ø)" : "noch keine Daten"
+        }</div></div>
+      </div>
+      <div class="portal-rows">
+        ${["grimmeissen", "rothfuss", "cologne_watch"].map(p => {
+          const price = byPlatform[p];
+          return `<div class="portal-row ${price == null ? "unavailable" : ""}">
+            <span class="name"><span class="dot" style="background:var(${PLATFORM_COLOR_VAR[p]})"></span>${PLATFORM_LABEL[p]}</span>
+            <span class="val num">${price != null ? fmtPrice(price) : "nicht verfügbar"}</span>
+          </div>`;
+        }).join("")}
+      </div>
+      ${prices.length ? `<div class="bars">
+        ${listings.filter(l => l.price != null).map(l => `<div class="bar" style="height:${Math.max(8, l.price / maxBar * 44)}px; background:var(${PLATFORM_COLOR_VAR[l.platform]})" title="${PLATFORM_LABEL[l.platform]}: ${fmtPrice(l.price)}"></div>`).join("")}
+      </div>` : ""}
+    `;
+  }
+  return div;
+}
+
+function renderFavorites() {
+  const grid = document.getElementById("favoritesGrid");
+  const empty = document.getElementById("favoritesEmpty");
+  grid.innerHTML = "";
+  if (!favorites.length) { empty.hidden = false; grid.hidden = true; return; }
+  empty.hidden = true; grid.hidden = false;
+  favorites.forEach(fav => grid.appendChild(renderFavoriteTile(fav)));
+  grid.querySelectorAll("[data-remove]").forEach(btn => {
+    btn.addEventListener("click", () => removeFavorite(btn.dataset.remove));
+  });
+}
+
+function renderTop10() {
+  const el = document.getElementById("top10");
+  const max = Math.max(...DATA.top10.map(t => t.count));
+  el.innerHTML = DATA.top10.map(t => `
+    <div class="top10-row">
+      <div class="top10-label">${t.brand} ${t.model_line}</div>
+      <div class="top10-track"><div class="top10-fill" style="width:${t.count / max * 100}%"></div></div>
+      <div class="top10-count num">${t.count}</div>
+    </div>
+  `).join("");
+}
+
+// ---------- brands tab ----------
+let openDrilldown = null;
+
+function renderBrandBlocks() {
+  const el = document.getElementById("brandBlocks");
+  el.innerHTML = DATA.brands.map(b => {
+    const isFav = favorites.some(f => f.type === "brand" && f.brand === b.brand);
+    return `
+    <div class="brand-block">
+      <div class="brand-block-head">
+        <button class="star-btn ${isFav ? "on" : ""}" data-brand-star="${b.brand}">★</button>
+        <h3>${b.brand}</h3>
+        <span class="sub">${b.active_count} aktive Angebote · ${fmtPrice(b.price_min)} – ${fmtPrice(b.price_max)}</span>
+      </div>
+      <div class="model-grid" data-brand-grid="${b.brand}"></div>
+    </div>`;
+  }).join("");
+
+  DATA.brands.forEach(b => {
+    const grid = el.querySelector(`[data-brand-grid="${CSS.escape(b.brand)}"]`);
+    const models = DATA.model_lines.filter(m => m.brand === b.brand).sort((a, c) => c.count - a.count);
+    models.forEach(m => {
+      const card = document.createElement("div");
+      card.className = "model-card";
+      const isFav = favorites.some(f => f.type === "model" && f.brand === m.brand && f.model_line === m.model_line && !f.reference_number);
+      card.innerHTML = `
+        <button class="photo-btn" data-open="${m.brand}|||${m.model_line}">
+          ${m.image_url ? `<img src="${m.image_url}" alt="">` : `<div class="placeholder">⌚</div>`}
+        </button>
+        <div class="star-row"><button class="star-btn ${isFav ? "on" : ""}" data-model-star="${m.brand}|||${m.model_line}">★</button></div>
+        <div class="name">${m.model_line}</div>
+        <div class="count num">${m.count} aktiv</div>
+      `;
+      grid.appendChild(card);
+    });
+  });
+
+  el.querySelectorAll("[data-brand-star]").forEach(btn => {
+    btn.addEventListener("click", () => toggleBrandFavorite(btn.dataset.brandStar));
+  });
+  el.querySelectorAll("[data-model-star]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const [brand, modelLine] = btn.dataset.modelStar.split("|||");
+      toggleModelFavorite(brand, modelLine, null);
+    });
+  });
+  el.querySelectorAll("[data-open]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const [brand, modelLine] = btn.dataset.open.split("|||");
+      toggleDrilldown(brand, modelLine, btn.closest(".model-card"));
+    });
+  });
+}
+
+function toggleDrilldown(brand, modelLine, cardEl) {
+  const existing = document.querySelector(".drilldown");
+  if (existing) existing.remove();
+  if (openDrilldown === brand + "|||" + modelLine) { openDrilldown = null; return; }
+  openDrilldown = brand + "|||" + modelLine;
+
+  const m = findModelLine(brand, modelLine);
+  const listings = m.listings.filter(l => l.price != null);
+  const maxPrice = Math.max(1, ...listings.map(l => l.price));
+  const refs = {};
+  m.listings.forEach(l => { const k = l.reference_number || "—"; (refs[k] = refs[k] || []).push(l); });
+
+  const div = document.createElement("div");
+  div.className = "drilldown";
+  div.innerHTML = `
+    <div class="legend">
+      ${["grimmeissen", "rothfuss", "cologne_watch"].map(p => `<span class="item"><span class="dot" style="background:var(${PLATFORM_COLOR_VAR[p]})"></span>${PLATFORM_LABEL[p]}</span>`).join("")}
+    </div>
+    <div class="drilldown-bars">
+      ${listings.map(l => `
+        <div class="bar-wrap">
+          <div class="bar-price num">${fmtPrice(l.price)}</div>
+          <div class="bar" style="height:${Math.max(10, l.price / maxPrice * 70)}px; background:var(${PLATFORM_COLOR_VAR[l.platform]})"></div>
+        </div>
+      `).join("")}
+    </div>
+    <div class="ref-list">
+      ${Object.entries(refs).map(([ref, items]) => {
+        const isFav = ref !== "—" && favorites.some(f => f.type === "model" && f.brand === brand && f.model_line === modelLine && f.reference_number === ref);
+        return items.map(l => `
+          <div class="ref-row">
+            ${ref !== "—" ? `<button class="star-btn ${isFav ? "on" : ""}" data-ref-star="${brand}|||${modelLine}|||${ref}">★</button>` : `<span style="width:22px;"></span>`}
+            <span class="ref num">${ref}</span>
+            <span class="plat">${PLATFORM_LABEL[l.platform]}${l.condition ? " · " + l.condition : ""}${l.dial_color ? " · " + l.dial_color : ""}</span>
+            <span class="price num">${fmtPrice(l.price)}</span>
+            <a href="${l.url}" target="_blank" rel="noopener">Angebot ↗</a>
+          </div>
+        `).join("");
+      }).join("")}
+    </div>
+  `;
+  cardEl.closest(".model-grid").appendChild(div);
+  div.querySelectorAll("[data-ref-star]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const [b, ml, ref] = btn.dataset.refStar.split("|||");
+      toggleModelFavorite(b, ml, ref);
+    });
+  });
+}
+
+// ---------- favorites persistence ----------
+async function toggleModelFavorite(brand, modelLine, referenceNumber) {
+  const existing = favorites.find(f => f.type === "model" && f.brand === brand && f.model_line === modelLine && (f.reference_number || null) === (referenceNumber || null));
+  if (existing) { await removeFavorite(existing.id); return; }
+  const id = "m_" + Math.random().toString(36).slice(2, 10);
+  const fav = { id, type: "model", brand, model_line: modelLine, reference_number: referenceNumber || null, display_name: null, image_url: null, added_at: new Date().toISOString() };
+  favorites.push(fav);
+  await persistFavorite(fav);
+  renderAll();
+}
+
+async function toggleBrandFavorite(brand) {
+  const existing = favorites.find(f => f.type === "brand" && f.brand === brand);
+  if (existing) { await removeFavorite(existing.id); return; }
+  const id = "b_" + Math.random().toString(36).slice(2, 10);
+  const fav = { id, type: "brand", brand, model_line: null, reference_number: null, display_name: null, image_url: null, added_at: new Date().toISOString() };
+  favorites.push(fav);
+  await persistFavorite(fav);
+  renderAll();
+}
+
+async function removeFavorite(id) {
+  favorites = favorites.filter(f => f.id !== id);
+  renderAll();
+  if (db) { try { await db.doc("favorites/" + id).delete(); } catch (e) {} }
+}
+
+async function persistFavorite(fav) {
+  if (!db) return;
+  try { await db.doc("favorites/" + fav.id).set(fav); } catch (e) {}
+}
+
+async function loadFavorites() {
+  if (!db) return;
+  try {
+    const snap = await db.collection("favorites").get();
+    favorites = snap.docs.map(d => d.data());
+  } catch (e) {}
+}
+
+// ---------- add-favorite modal ----------
+const modalBackdrop = document.getElementById("addModalBackdrop");
+document.getElementById("addFavoriteBtn").addEventListener("click", () => { modalBackdrop.hidden = false; });
+document.getElementById("fMCancel").addEventListener("click", () => { modalBackdrop.hidden = true; });
+document.getElementById("fMSave").addEventListener("click", async () => {
+  const brand = document.getElementById("fMBrand").value.trim();
+  const modelLine = document.getElementById("fMModelLine").value.trim();
+  const ref = document.getElementById("fMRef").value.trim();
+  const name = document.getElementById("fMName").value.trim();
+  const image = document.getElementById("fMImage").value.trim();
+  if (!brand || !modelLine) return;
+  const id = "m_" + Math.random().toString(36).slice(2, 10);
+  const fav = { id, type: "model", brand, model_line: modelLine, reference_number: ref || null, display_name: name || null, image_url: image || null, added_at: new Date().toISOString() };
+  favorites.push(fav);
+  await persistFavorite(fav);
+  modalBackdrop.hidden = true;
+  ["fMBrand", "fMModelLine", "fMRef", "fMName", "fMImage"].forEach(id => document.getElementById(id).value = "");
+  renderAll();
+});
+
+// ---------- table tab ----------
+let tableSort = { key: "brand", dir: 1 };
+function renderTable() {
+  const q = document.getElementById("tableSearch").value.toLowerCase();
+  let rows = DATA.table.filter(r => !q || Object.values(r).some(v => String(v || "").toLowerCase().includes(q)));
+  rows = rows.slice().sort((a, b) => {
+    const av = a[tableSort.key], bv = b[tableSort.key];
+    if (av == null) return 1; if (bv == null) return -1;
+    return (av > bv ? 1 : av < bv ? -1 : 0) * tableSort.dir;
+  });
+  document.getElementById("tableBody").innerHTML = rows.map(r => `
+    <tr>
+      <td>${r.brand}</td>
+      <td>${r.model_line}</td>
+      <td class="num">${r.reference_number || "–"}</td>
+      <td class="num">${fmtPrice(r.price, r.currency)}</td>
+      <td>${PLATFORM_LABEL[r.platform] || r.platform}</td>
+      <td>${r.condition || "–"}</td>
+      <td class="num">${r.year || "–"}</td>
+      <td>${r.band_material || "–"}</td>
+      <td>${r.dial_color || "–"}</td>
+    </tr>
+  `).join("");
+}
+document.getElementById("tableSearch").addEventListener("input", renderTable);
+document.querySelectorAll("#dataTable th").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.key;
+    tableSort = { key, dir: tableSort.key === key ? -tableSort.dir : 1 };
+    renderTable();
+  });
+});
+
+function renderAll() {
+  renderFavorites();
+  renderTop10();
+  renderBrandBlocks();
+  renderTable();
+}
+
+(async () => {
+  try { db = await claude.use("db"); } catch (e) { db = null; }
+  await loadFavorites();
+  renderAll();
+})();
+</script>
