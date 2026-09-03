@@ -1,0 +1,31 @@
+[
+  {
+    "brand": "Sinn",
+    "reference_number": "103 . 181",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Leder (Dornschließe Edelstahl)",
+    "size_mm": 41
+  },
+  {
+    "brand": "Sinn",
+    "reference_number": "358.065",
+    "case_material": "Edelstahl (satiniert)",
+    "bracelet_type": "Edelstahl-Feingliederband (Faltschließe)",
+    "size_mm": 42
+  },
+  {
+    "brand": "Sinn",
+    "reference_number": "303",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahl-Gliederband",
+    "size_mm": 41
+  },
+  {
+    "brand": "Sinn",
+    "reference_number": "142",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahl-Gliederband",
+    "size_mm": 43
+  }
+]
