@@ -1,0 +1,138 @@
+[
+  {
+    "brand": "IWC",
+    "reference_number": "IW358312",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 40.4
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "329005",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 42
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "503605",
+    "case_material": "Edelstahl",
+    "size_mm": 46.2
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "3705",
+    "case_material": "Keramik",
+    "bracelet_type": "Lederband",
+    "size_mm": 39
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "3728-005",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 36
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "3700",
+    "case_material": "Titan",
+    "bracelet_type": "Titanband",
+    "size_mm": 42
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "356805",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 44
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "3706",
+    "case_material": "Edelstahl",
+    "size_mm": 39
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "371343",
+    "case_material": "Edelstahl",
+    "size_mm": 42
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "376403",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 43.1
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "IW390502",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 43.5
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "IW389002",
+    "case_material": "Keramik",
+    "bracelet_type": "Lederband",
+    "size_mm": 44
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "501902",
+    "case_material": "Keramik",
+    "bezel_material": "Titan",
+    "size_mm": 48
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "3741",
+    "case_material": "Edelstahl",
+    "size_mm": 36
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "IW510301",
+    "case_material": "Titan",
+    "bracelet_type": "Lederband",
+    "size_mm": 48
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "500916",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 46
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "544503",
+    "case_material": "Roségold",
+    "bracelet_type": "Lederband",
+    "size_mm": 44
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "3756 009",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 43
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "371610",
+    "case_material": "Roségold",
+    "bracelet_type": "Lederband",
+    "size_mm": 41
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "3752 01",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 39
+  }
+]
