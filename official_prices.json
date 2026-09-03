@@ -1,0 +1,389 @@
+[
+  {
+    "brand": "Rolex",
+    "reference_number": "126900",
+    "price": 7850,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/air-king/1356-271-7.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126200",
+    "price": 7850,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/datejust/1318-537-4.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126334",
+    "price": 11450,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/datejust/1356-456-4.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126233",
+    "price": 10700,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/datejust/1342-347-7.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126331",
+    "price": 17700,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/at/en/rolex/watches/datejust/1306-968-8.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126300",
+    "price": 8650,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/fr/fr/rolex/montres/datejust/1296-729-0.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126203",
+    "price": 14600,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/fr/fr/rolex/montres/datejust/1307-099-2.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126303",
+    "price": 15250,
+    "currency": "EUR",
+    "source": "Wempe",
+    "source_url": "https://www.wempe.com/fr-fr/rolex/montres/datejust/datejust-41-m126303-0001",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126518LN",
+    "price": 37150,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/cosmograph-daytona/2025-000-5.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126500LN",
+    "price": 16200,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/cosmograph-daytona/1372-341-2.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126509",
+    "price": 57100,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/cosmograph-daytona/1372-481-3.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "226570",
+    "price": 10250,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/explorer/1342-397-7.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126710 BLNR",
+    "price": 11550,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/gmt-master-ii/1318-199-6.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "127334",
+    "price": 15950,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/fr/fr/rolex/montres/land-dweller/1429-868-9.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126000",
+    "price": 6450,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/oyster-perpetual/1429-922-8.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "134300",
+    "price": 6850,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/fr/en/rolex/watches/oyster-perpetual/1429-927-3.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126600",
+    "price": 14100,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/fr/en/rolex/watches/sea-dweller/1358-806-4.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126603",
+    "price": 21850,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/at/de/rolex/uhren/sea-dweller/1318-215-9.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "336934",
+    "price": 17100,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/sky-dweller/1372-361-6.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "336933",
+    "price": 23850,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/sky-dweller/1372-347-8.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "124060",
+    "price": 9750,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/submariner/1335-873-9.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126610LV",
+    "price": 11500,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/submariner/1335-887-5.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126613LN",
+    "price": 18700,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/submariner/1335-921-0.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126610LN",
+    "price": 10950,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/submariner/1335-897-7.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "226627",
+    "price": 15450,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/rolex/uhren/yacht-master/1372-503-2.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "228235",
+    "price": 52700,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/fr/fr/rolex/montres/day-date/1409-902-0.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5968A-001",
+    "price": 57240,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/uhren/patek-philippe/aquanaut/1307-554-4.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "6007G-001",
+    "price": 41140,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/uhren/patek-philippe/calatrava/1372-246-4.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5212A-001",
+    "price": 39980,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/uhren/patek-philippe/calatrava/1318-133-8.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5172G-001",
+    "price": 90040,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/uhren/patek-philippe/complications/1318-130-5.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5270P-014",
+    "price": 230600,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/uhren/patek-philippe/grand-complications/1356-648-0.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "7130G-016",
+    "price": 64310,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/uhren/patek-philippe/complications/1316-876-2.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5230P-001",
+    "price": 72420,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/uhren/patek-philippe/complications/1356-379-8.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "7130R-014",
+    "price": 64312,
+    "currency": "EUR",
+    "source": "Wempe",
+    "source_url": "https://www.wempe.com/de-de/uhren/patek-philippe/komplizierte-uhren/komplikation-damen-7130r-014-7130r-014",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5930P-001",
+    "price": 109620,
+    "currency": "EUR",
+    "source": "Wempe",
+    "source_url": "https://www.wempe.com/de-de/uhren/patek-philippe/komplizierte-uhren/komplikation-herren-5930p-5930p-001",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Sinn",
+    "reference_number": "358.065",
+    "price": 3150,
+    "currency": "EUR",
+    "source": "Sinn",
+    "source_url": "https://www.sinn.de/en/Modell/358_Sa_PILOT_DS.htm",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Tudor",
+    "reference_number": "79733N",
+    "price": 3720,
+    "currency": "EUR",
+    "source": "Tudor",
+    "source_url": "https://www.tudorwatch.com/en/watches/black-bay/m79733n-0004",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Tudor",
+    "reference_number": "79310N",
+    "price": 6200,
+    "currency": "EUR",
+    "source": "Tudor",
+    "source_url": "https://www.tudorwatch.com/en/watch-family/daring-watches/m79310n-0001",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Tudor",
+    "reference_number": "79830RB",
+    "price": 4780,
+    "currency": "EUR",
+    "source": "Bucherer",
+    "source_url": "https://www.bucherer.com/de/de/watches/tudor/black-bay/1371-822-0.html",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "IB0134101G1A1",
+    "price": 11050,
+    "currency": "EUR",
+    "source": "Breitling",
+    "source_url": "https://www.breitling.com/by-en/watches/chronomat/chronomat-b01-42/IB0134101G1A1/",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "IW358312",
+    "price": 8100,
+    "currency": "EUR",
+    "source": "IWC",
+    "source_url": "https://www.iwc.com/us-en/watches/portugieser/iw358312-portugieser-automatic-40",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "210.32",
+    "price": 6700,
+    "currency": "EUR",
+    "source": "Omega",
+    "source_url": "https://www.omegawatches.com/en-us/watch-omega-seamaster-diver-300m-co-axial-master-chronometer-42-mm-21032422006002",
+    "checked_date": "2026-09-03"
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "31030425001004",
+    "price": 10100,
+    "currency": "EUR",
+    "source": "Omega",
+    "source_url": "https://www.omegawatches.com/de-de/watch-omega-speedmaster-moonwatch-professional-co-axial-master-chronometer-chronograph-42-mm-31030425001004",
+    "checked_date": "2026-09-03"
+  }
+]
