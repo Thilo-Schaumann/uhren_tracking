@@ -1,0 +1,31 @@
+[
+  {
+    "brand": "TAG Heuer",
+    "reference_number": "WBP201B-0",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "size_mm": 43
+  },
+  {
+    "brand": "TAG Heuer",
+    "reference_number": "CV2A11.FC6235",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 43
+  },
+  {
+    "brand": "TAG Heuer",
+    "reference_number": "CAR2C11-0",
+    "case_material": "Edelstahl/Titan",
+    "bezel_material": "Titan",
+    "bracelet_type": "Lederband",
+    "size_mm": 45
+  },
+  {
+    "brand": "TAG Heuer",
+    "reference_number": "CBG3A91",
+    "case_material": "Keramik",
+    "bracelet_type": "Lederband",
+    "size_mm": 45
+  }
+]
