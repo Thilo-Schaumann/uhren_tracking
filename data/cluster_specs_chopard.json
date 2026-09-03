@@ -1,0 +1,58 @@
+[
+  {
+    "brand": "Chopard",
+    "reference_number": "8357",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahl-Band",
+    "size_mm": "24x35"
+  },
+  {
+    "brand": "Chopard",
+    "reference_number": "16/8955",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband, schwarz",
+    "size_mm": 40
+  },
+  {
+    "brand": "Chopard",
+    "reference_number": "8511",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Kautschukband, weiß",
+    "size_mm": 40
+  },
+  {
+    "brand": "Chopard",
+    "reference_number": "20/6122-23",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Krokodilleder, blau",
+    "size_mm": 27
+  },
+  {
+    "brand": "Chopard",
+    "reference_number": "27/6195-21",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Gelbgold-Band",
+    "size_mm": 31
+  },
+  {
+    "brand": "Chopard",
+    "reference_number": "5096",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 20
+  },
+  {
+    "brand": "Chopard",
+    "reference_number": "6823",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": "24x35"
+  },
+  {
+    "brand": "Chopard",
+    "reference_number": "416547",
+    "case_material": "Weißgold",
+    "bracelet_type": "Alligatorleder, schwarz",
+    "size_mm": 30
+  }
+]
