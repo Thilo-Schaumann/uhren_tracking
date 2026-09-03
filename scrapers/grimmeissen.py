@@ -6,7 +6,7 @@ from .http import fetch_text
 from .model_line import extract_model_line
 
 BASE_URL = "https://www.grimmeissen.de"
-LISTING_URL = f"{BASE_URL}/de/uhren"
+BRANDS_URL = f"{BASE_URL}/de/marken"
 
 _PRICE = re.compile(r"([\d.]+),(\d{2})\s*€")
 
@@ -46,9 +46,13 @@ def _fetch_detail_specs(detail_url: str) -> dict:
     return raw
 
 
-def scrape() -> list[dict]:
-    html = fetch_text(LISTING_URL)
-    soup = BeautifulSoup(html, "html.parser")
+def _brand_slugs() -> list[str]:
+    html = fetch_text(BRANDS_URL)
+    return sorted(set(re.findall(r"/de/marken/([a-z0-9\-]+)", html)))
+
+
+def _scrape_listing_page(url: str) -> list[dict]:
+    soup = BeautifulSoup(fetch_text(url), "html.parser")
     items = []
 
     for article in soup.select("article.watch"):
@@ -85,3 +89,14 @@ def scrape() -> list[dict]:
         items.append(item)
 
     return items
+
+
+def scrape() -> list[dict]:
+    """Grimmeissen has no single "all watches" page — /de/uhren only shows the
+    newest ~35 arrivals. The full catalog (300+) is only reachable by crawling
+    every /de/marken/{brand} page."""
+    items = {}
+    for slug in _brand_slugs():
+        for item in _scrape_listing_page(f"{BASE_URL}/de/marken/{slug}"):
+            items[item["external_id"]] = item  # de-dupe in case a watch is cross-listed
+    return list(items.values())
