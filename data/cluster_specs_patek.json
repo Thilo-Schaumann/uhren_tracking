@@ -1,0 +1,188 @@
+[
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5712G",
+    "case_material": "Weißgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 40
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5146 G - 010",
+    "case_material": "Weißgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 39
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5712/1A-001",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Integriertes Stahlband",
+    "size_mm": 40
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5172G-001",
+    "case_material": "Weißgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 41
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "7130G-016",
+    "case_material": "Weißgold",
+    "bezel_material": "Diamant-Lünette",
+    "bracelet_type": "Lederband",
+    "size_mm": 36
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "6007G-001",
+    "case_material": "Weißgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 40
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5212A-001",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 40
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5270P-014",
+    "case_material": "Platin",
+    "bracelet_type": "Lederband",
+    "size_mm": 41
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5270P-001",
+    "case_material": "Platin",
+    "bracelet_type": "Lederband",
+    "size_mm": 41
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "3710",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Integriertes Stahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5230P-001",
+    "case_material": "Platin",
+    "bracelet_type": "Lederband",
+    "size_mm": 38.5
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5976",
+    "case_material": "Weißgold",
+    "bracelet_type": "Integriertes Goldband",
+    "size_mm": 44
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5020G-013",
+    "case_material": "Weißgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 37
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "7130R-014",
+    "case_material": "Roségold",
+    "bezel_material": "Diamant-Lünette",
+    "bracelet_type": "Lederband",
+    "size_mm": 36
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5930P-001",
+    "case_material": "Platin",
+    "bracelet_type": "Lederband",
+    "size_mm": 39.5
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5204R-011",
+    "case_material": "Roségold",
+    "bracelet_type": "Lederband",
+    "size_mm": 40
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5135R - 001",
+    "case_material": "Roségold",
+    "bracelet_type": "Lederband",
+    "size_mm": 38
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5135 J",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 38
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5135 G",
+    "case_material": "Weißgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 38
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5059 J - 011",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 36
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "4947R-001",
+    "case_material": "Roségold",
+    "bezel_material": "Diamant-Lünette",
+    "bracelet_type": "Lederband",
+    "size_mm": 38
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5070 J",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5172 G - 010",
+    "case_material": "Weißgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 41
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5101 P",
+    "case_material": "Platin",
+    "bracelet_type": "Lederband",
+    "size_mm": 30
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "5711/1A-010",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Integriertes Stahlband",
+    "size_mm": 40
+  },
+  {
+    "brand": "Patek Philippe",
+    "reference_number": "400G-001",
+    "case_material": "Weißgold",
+    "bezel_material": "Diamant-Lünette",
+    "bracelet_type": "Lederband",
+    "size_mm": 36.5
+  }
+]
