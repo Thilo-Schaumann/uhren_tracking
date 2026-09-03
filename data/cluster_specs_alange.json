@@ -1,0 +1,51 @@
+[
+  {
+    "brand": "A. Lange & Söhne",
+    "reference_number": "760.032F",
+    "case_material": "Roségold",
+    "bracelet_type": "Lederband",
+    "size_mm": 41.9
+  },
+  {
+    "brand": "A. Lange & Söhne",
+    "reference_number": "1815",
+    "case_material": "Platin",
+    "bracelet_type": "Lederband",
+    "size_mm": 35.9
+  },
+  {
+    "brand": "A. Lange & Söhne",
+    "reference_number": "115.029",
+    "case_material": "Weißgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 41.9
+  },
+  {
+    "brand": "A. Lange & Söhne",
+    "reference_number": "221.021",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 35.9
+  },
+  {
+    "brand": "A. Lange & Söhne",
+    "reference_number": "025F",
+    "case_material": "Platin",
+    "bracelet_type": "Lederband",
+    "size_mm": 45.9
+  },
+  {
+    "brand": "A. Lange & Söhne",
+    "reference_number": "310.050",
+    "case_material": "Honiggold",
+    "bracelet_type": "Lederband",
+    "size_mm": 38.5
+  },
+  {
+    "brand": "A. Lange & Söhne",
+    "reference_number": "109.025",
+    "case_material": "Platin",
+    "bracelet_type": "Lederband",
+    "size_mm": 38.5
+  }
+]
