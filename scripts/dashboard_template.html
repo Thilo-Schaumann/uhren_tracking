@@ -234,6 +234,7 @@
           <th data-key="year">Jahr</th>
           <th data-key="band_material">Band</th>
           <th data-key="dial_color">Zifferblatt</th>
+          <th>Angebot</th>
         </tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
@@ -705,11 +706,12 @@ function renderTable() {
       <td class="num">${r.year || "–"}</td>
       <td>${r.band_material || "–"}</td>
       <td>${r.dial_color || "–"}</td>
+      <td>${r.url ? `<a href="${r.url}" target="_blank" rel="noopener">Angebot ↗</a>` : "–"}</td>
     </tr>
   `).join("");
 }
 document.getElementById("tableSearch").addEventListener("input", renderTable);
-document.querySelectorAll("#dataTable th").forEach(th => {
+document.querySelectorAll("#dataTable th[data-key]").forEach(th => {
   th.addEventListener("click", () => {
     const key = th.dataset.key;
     tableSort = { key, dir: tableSort.key === key ? -tableSort.dir : 1 };
