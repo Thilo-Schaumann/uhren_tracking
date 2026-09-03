@@ -659,5 +659,124 @@
     "case_material": "Edelstahl",
     "bracelet_type": "Oyster",
     "size_mm": 41
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "55130",
+    "case_material": "Edelstahl",
+    "bezel_material": "Aluminium",
+    "bracelet_type": "NATO",
+    "size_mm": 40
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "116610",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Oyster",
+    "size_mm": 40
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "128235",
+    "case_material": "Everose-Gold",
+    "bracelet_type": "President",
+    "size_mm": 36
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "116520",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Oyster",
+    "size_mm": 40
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "69178",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Oyster",
+    "size_mm": 26
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "6466",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Oyster"
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "126231",
+    "case_material": "Stahl/Everose-Gold",
+    "bracelet_type": "Jubilee",
+    "size_mm": 36
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "1603",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Oyster",
+    "size_mm": 36
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "116000",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Oyster",
+    "size_mm": 36
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "278274",
+    "case_material": "Stahl/Weißgold",
+    "bracelet_type": "Jubilee",
+    "size_mm": 31
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "80328",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Pearlmaster",
+    "size_mm": 29
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "276200",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Oyster",
+    "size_mm": 28
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "116589RBR",
+    "case_material": "Weißgold",
+    "bezel_material": "Diamant-besetzt",
+    "bracelet_type": "Leder",
+    "size_mm": 40
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "178274",
+    "case_material": "Stahl/Weißgold",
+    "size_mm": 31
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "278241",
+    "case_material": "Stahl/Everose-Gold",
+    "bracelet_type": "Jubilee",
+    "size_mm": 31
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "178246",
+    "case_material": "Platin",
+    "bracelet_type": "President",
+    "size_mm": 31
+  },
+  {
+    "brand": "Rolex",
+    "reference_number": "1490",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Leder"
   }
 ]
