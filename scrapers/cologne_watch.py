@@ -1,8 +1,10 @@
-from .shopify import scrape_shopify_collection
+from .shopify import scrape_shopify_store
 
 BASE_URL = "https://www.colognewatch.de"
-COLLECTION = "herrenuhren"
 
 
 def scrape() -> list[dict]:
-    return scrape_shopify_collection(BASE_URL, COLLECTION, seller="cologne_watch", shop_display_name="Cologne Watch")
+    return scrape_shopify_store(
+        BASE_URL, seller="cologne_watch", shop_display_name="Cologne Watch",
+        exclude_product_types={"Uhrenetui"},  # watch cases/rolls, not watches
+    )

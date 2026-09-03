@@ -11,17 +11,23 @@ PAGE_LIMIT = 250
 _TAG_STRIP = re.compile(r"<[^>]+>")
 
 
-def scrape_shopify_collection(base_url: str, collection_handle: str, seller: str, shop_display_name: str) -> list[dict]:
+def scrape_shopify_store(base_url: str, seller: str, shop_display_name: str, exclude_product_types: set[str] = frozenset()) -> list[dict]:
+    """Scrapes the store-wide /products.json feed rather than a single collection —
+    a collection like "alle-uhren" or "herrenuhren" is curated by the shop and can
+    silently exclude real watches (confirmed missing ~10-20% of inventory at both
+    Rothfuss and Cologne Watch)."""
     items = []
     page = 1
     while True:
-        url = f"{base_url}/collections/{collection_handle}/products.json?limit={PAGE_LIMIT}&page={page}"
+        url = f"{base_url}/products.json?limit={PAGE_LIMIT}&page={page}"
         data = fetch_json(url)
         products = data.get("products", [])
         if not products:
             break
 
         for product in products:
+            if product.get("product_type") in exclude_product_types:
+                continue
             variant = product["variants"][0] if product.get("variants") else {}
             if not variant.get("available", True):
                 continue
