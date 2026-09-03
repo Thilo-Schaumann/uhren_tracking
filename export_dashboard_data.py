@@ -10,6 +10,7 @@ from db import connect
 THUMBNAIL_CACHE = Path("thumbnails_cache.json")
 MODEL_VARIANTS = Path("model_variants.json")
 BRAND_LOGOS = Path("brand_logos.json")
+OFFICIAL_PRICES = Path("official_prices.json")
 
 
 def _days_between(a: str, b: str) -> int:
@@ -31,6 +32,13 @@ def build():
         for v in json.loads(MODEL_VARIANTS.read_text()):
             nicknames[(v["brand"], v["reference_number"])].append(v["nickname"])
     nicknames = {k: " / ".join(dict.fromkeys(v)) for k, v in nicknames.items()}
+
+    official_prices = {}
+    if OFFICIAL_PRICES.exists():
+        for p in json.loads(OFFICIAL_PRICES.read_text()):
+            official_prices[(p["brand"], p["reference_number"])] = {
+                "price": p["price"], "source": p["source"],
+            }
 
     active = conn.execute("""
         SELECT l.brand, l.model_line, l.reference_number, p.price, p.currency, l.platform,
@@ -79,6 +87,11 @@ def build():
             for (b, ml, ref), days in sold_days_by_ref.items()
             if b == brand and ml == model_line
         }
+        official = {
+            item["reference_number"]: official_prices[(brand, item["reference_number"])]
+            for item in listings
+            if item["reference_number"] and (brand, item["reference_number"]) in official_prices
+        }
         model_lines.append({
             "brand": brand,
             "model_line": model_line,
@@ -88,6 +101,7 @@ def build():
             "image_url": next((item["image_url"] for item in listings if item["image_url"]), None),
             **_stats(sold_days_by_line.get((brand, model_line), [])),
             "ref_stats": ref_stats,
+            "official_prices": official,
             "listings": listings,
         })
     model_lines.sort(key=lambda m: (m["brand"], m["model_line"]))
@@ -130,6 +144,7 @@ def build():
             "condition": item["condition"], "year": item["year"],
             "band_material": item["band_material"], "dial_color": item["dial_color"],
             "url": item["url"],
+            "official_price": m["official_prices"].get(item["reference_number"], {}).get("price"),
         }
         for m in model_lines for item in m["listings"]
     ]

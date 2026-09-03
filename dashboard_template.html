@@ -109,6 +109,8 @@
   .axis-labels { display: flex; flex-direction: column; justify-content: space-between; font-size: 9.5px; color: var(--ink-muted); text-align: right; padding-bottom: 1px; }
   .axis-plot { position: relative; flex: 1; border-left: 1px solid var(--gridline); }
   .axis-plot .gridline { position: absolute; left: 0; right: 0; border-top: 1px solid var(--gridline); }
+  .ref-line { position: absolute; left: 0; right: 0; border-top: 2px solid var(--ink); z-index: 2; }
+  .ref-line-label { position: absolute; right: 0; bottom: 2px; background: var(--card); padding: 0 3px; font-size: 9.5px; color: var(--ink); white-space: nowrap; }
   .bars { position: relative; display: flex; align-items: flex-end; gap: 3px; height: 100%; }
   .bar { flex: 1; border-radius: 3px 3px 1px 1px; min-width: 4px; position: relative; z-index: 1; }
 
@@ -165,6 +167,7 @@
   .ref-row .nickname { color: var(--star-on); font-weight: 600; }
   .ref-row .plat { color: var(--ink-secondary); flex: 1; }
   .ref-row .price { font-weight: 600; }
+  .ref-row .official { color: var(--ink-muted); font-size: 11.5px; }
   .ref-row a { font-size: 11.5px; }
 
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -296,9 +299,11 @@ function niceStep(maxValue) {
 
 function renderAxisChart(items, opts) {
   // items: [{price, colorVar, label, title}]
+  // opts.referenceLine: {value, label} — e.g. official retail price, drawn as a horizontal line
   const prices = items.map(i => i.price).filter(p => p != null);
   if (!prices.length) return `<div class="empty-state" style="padding:10px; font-size:12px;">Keine Preisdaten</div>`;
-  const max = Math.max(...prices);
+  const refLine = opts.referenceLine;
+  const max = Math.max(...prices, refLine ? refLine.value : 0);
   const step = niceStep(max);
   const axisMax = Math.ceil(max / step) * step;
   const ticks = [];
@@ -310,10 +315,14 @@ function renderAxisChart(items, opts) {
       ${opts.showPriceLabel ? `<div class="bar-price num">${fmtPrice(it.price)}</div>` : ""}
     </div>`).join("");
   const labelsHtml = ticks.slice().reverse().map(t => `<div>${new Intl.NumberFormat("de-DE", {notation:"compact"}).format(t)}</div>`).join("");
+  const refLineHtml = refLine ? `
+    <div class="ref-line" style="bottom:${refLine.value / axisMax * 100}%" title="${refLine.label}: ${fmtPrice(refLine.value)}">
+      <span class="ref-line-label num">${refLine.label} ${fmtPrice(refLine.value)}</span>
+    </div>` : "";
   return `
     <div class="axis-chart" style="height:${height}px;">
       <div class="axis-labels">${labelsHtml}</div>
-      <div class="axis-plot">${gridlinesHtml}<div class="bars">${barsHtml}</div></div>
+      <div class="axis-plot">${gridlinesHtml}<div class="bars">${barsHtml}</div>${refLineHtml}</div>
     </div>`;
 }
 
@@ -395,7 +404,13 @@ function renderFavoriteTile(fav) {
           </div>`;
         }).join("")}
       </div>
-      ${renderAxisChart(listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${PLATFORM_LABEL[l.platform]}: ${fmtPrice(l.price)}` })), { height: 44 })}
+      ${(() => {
+        const official = m && fav.reference_number ? m.official_prices[fav.reference_number] : null;
+        return renderAxisChart(
+          listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${PLATFORM_LABEL[l.platform]}: ${fmtPrice(l.price)}` })),
+          { height: 44, referenceLine: official ? { value: official.price, label: official.source } : null }
+        );
+      })()}
     `;
   }
   return div;
@@ -592,6 +607,7 @@ function toggleDrilldown(brand, modelLine, cardEl) {
             ${l.nickname ? `<span class="nickname">${l.nickname}</span>` : ""}
             <span class="plat">${PLATFORM_LABEL[l.platform]}${l.condition ? " · " + l.condition : ""}${l.dial_color ? " · " + l.dial_color : ""}</span>
             <span class="price num">${fmtPrice(l.price)}</span>
+            ${ref !== "—" && m.official_prices[ref] ? `<span class="official num" title="Neupreis (${m.official_prices[ref].source})">NP ${fmtPrice(m.official_prices[ref].price)}</span>` : ""}
             <a href="${l.url}" target="_blank" rel="noopener">Angebot ↗</a>
           </div>
         `).join("");
