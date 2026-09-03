@@ -1,0 +1,31 @@
+[
+  {
+    "brand": "Heuer",
+    "reference_number": "150.633",
+    "case_material": "Edelstahl",
+    "bezel_material": "Edelstahl (drehbare Rechenschieber-Lünette / slide-rule bezel)",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 45
+  },
+  {
+    "brand": "Heuer",
+    "reference_number": "1133B",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 39
+  },
+  {
+    "brand": "Heuer",
+    "reference_number": "110.501",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Heuer",
+    "reference_number": "110.503",
+    "case_material": "Edelstahl, PVD-beschichtet (schwarz)",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  }
+]
