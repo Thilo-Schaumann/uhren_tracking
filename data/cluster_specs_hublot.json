@@ -1,0 +1,58 @@
+[
+  {
+    "brand": "Hublot",
+    "reference_number": "301",
+    "case_material": "Tantal",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 44
+  },
+  {
+    "brand": "Hublot",
+    "reference_number": "0140",
+    "case_material": "Carbon",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 48
+  },
+  {
+    "brand": "Hublot",
+    "reference_number": "301G",
+    "case_material": "Keramik",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 44
+  },
+  {
+    "brand": "Hublot",
+    "reference_number": "1170",
+    "case_material": "Carbon",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 45
+  },
+  {
+    "brand": "Hublot",
+    "reference_number": "1171",
+    "case_material": "Titan",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Hublot",
+    "reference_number": "0138",
+    "case_material": "Magic Gold",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 45
+  },
+  {
+    "brand": "Hublot",
+    "reference_number": "311.SX.1170.GR",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 44
+  },
+  {
+    "brand": "Hublot",
+    "reference_number": "701.CI.0170.RX",
+    "case_material": "Keramik",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 48
+  }
+]
