@@ -14,6 +14,19 @@ Tägliche Datenbank zu Uhrenmodellen über mehrere Online-Händler, um Verweilda
 Ein Angebot gilt als verkauft, sobald es in einem täglichen Lauf nicht mehr
 auftaucht bzw. bei Shopify `available: false` wird.
 
+## Projektstruktur
+
+- `run.py`, `db.py`, `scrapers/` — täglicher Scrape-Lauf (Kern)
+- `data/` — `watches.db` + Stammdaten (`model_variants.json`, `brand_logos.json`,
+  `official_prices.json`); `thumbnails_cache.json` und `backup/` sind generiert
+  (git-ignoriert)
+- `scripts/` — Dashboard-Build (`export_dashboard_data.py`, `build_dashboard.py`,
+  `dashboard_template.html`) und Pflege-Skripte (`fetch_thumbnails.py`,
+  `fetch_brand_logos.py`, `fetch_ap_prices.py`, `backup_data.py`)
+
+Alle Skripte werden vom Projekt-Root aus aufgerufen (`python3 scripts/…`), nicht
+aus dem `scripts/`-Ordner heraus.
+
 ## Nutzung
 
 ```bash
@@ -21,7 +34,7 @@ pip install -r requirements.txt
 python run.py
 ```
 
-Legt/aktualisiert `watches.db` (SQLite) mit drei Tabellen:
+Legt/aktualisiert `data/watches.db` (SQLite) mit drei Tabellen:
 
 - `listings` (brand, model, model_line, reference_number, condition, year, has_papers,
   has_box, band_material, dial_color, image_url, seller, platform, url,
@@ -37,5 +50,9 @@ Titel/Beschreibung (Cologne Watch am unzuverlässigsten, v.a. bei `condition`).
 
 ## Automatisierung
 
-`.github/workflows/daily.yml` läuft täglich um 06:00 UTC, aktualisiert
-`watches.db` und committet die Änderung zurück ins Repo.
+`.github/workflows/daily.yml` läuft täglich um 05:00 CEST, aktualisiert
+`data/watches.db` und committet die Änderung zurück ins Repo.
+
+Ein wöchentlicher lokaler Task (Sonntag 18:00) sichert `data/watches.db` +
+Stammdaten sowie CSV-Exports jeder Tabelle nach `data/backup/` — unabhängig
+von Git, reine Dateikopie.

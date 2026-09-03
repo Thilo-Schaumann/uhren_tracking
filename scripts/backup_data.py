@@ -8,6 +8,8 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+
 FILES_TO_BACKUP = [
     "watches.db",
     "model_variants.json",
@@ -15,11 +17,11 @@ FILES_TO_BACKUP = [
     "official_prices.json",
 ]
 
-BACKUP_DIR = Path("backup")
+BACKUP_DIR = DATA_DIR / "backup"
 
 
 def _export_csv_tables():
-    conn = sqlite3.connect("watches.db")
+    conn = sqlite3.connect(DATA_DIR / "watches.db")
     tables = [r[0] for r in conn.execute(
         "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
     )]
@@ -38,7 +40,7 @@ def run():
     BACKUP_DIR.mkdir(exist_ok=True)
     copied = []
     for name in FILES_TO_BACKUP:
-        src = Path(name)
+        src = DATA_DIR / name
         if src.exists():
             shutil.copy2(src, BACKUP_DIR / name)
             copied.append(name)

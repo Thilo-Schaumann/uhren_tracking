@@ -16,7 +16,7 @@ from pathlib import Path
 
 from PIL import Image
 
-OUT_PATH = Path("brand_logos.json")
+OUT_PATH = Path(__file__).resolve().parent.parent / "data" / "brand_logos.json"
 MAX_SIZE = 200
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; watch-price-tracker/1.0; "

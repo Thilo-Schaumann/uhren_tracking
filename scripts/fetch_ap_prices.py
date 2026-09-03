@@ -15,9 +15,11 @@ price is only recorded when either exactly one full reference matches, or
 all matches share the same price — never guessed.
 """
 import json
+import sys
 import urllib.request
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from db import connect
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; watch-price-tracker/1.0)"}
@@ -79,7 +81,7 @@ if __name__ == "__main__":
     for f in found:
         print(" ", f["reference_number"], f["price"])
 
-    path = Path("official_prices.json")
+    path = Path(__file__).resolve().parent.parent / "data" / "official_prices.json"
     existing = json.loads(path.read_text()) if path.exists() else []
     existing = [e for e in existing if e["brand"] != "Audemars Piguet"]
     existing.extend(found)

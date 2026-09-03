@@ -2,7 +2,7 @@
 import sqlite3
 from datetime import date
 
-DB_PATH = "watches.db"
+DB_PATH = "data/watches.db"
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS listings (

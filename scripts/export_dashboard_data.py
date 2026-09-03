@@ -1,16 +1,19 @@
 """Exports watches.db into the JSON shape the dashboard artifact embeds.
-Run this, then build_dashboard.py to produce the publishable dashboard.html."""
+Run this (from the project root), then build_dashboard.py to produce dashboard.html."""
 import json
+import sys
 from collections import defaultdict
 from datetime import date
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from db import connect
 
-THUMBNAIL_CACHE = Path("thumbnails_cache.json")
-MODEL_VARIANTS = Path("model_variants.json")
-BRAND_LOGOS = Path("brand_logos.json")
-OFFICIAL_PRICES = Path("official_prices.json")
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+THUMBNAIL_CACHE = DATA_DIR / "thumbnails_cache.json"
+MODEL_VARIANTS = DATA_DIR / "model_variants.json"
+BRAND_LOGOS = DATA_DIR / "brand_logos.json"
+OFFICIAL_PRICES = DATA_DIR / "official_prices.json"
 
 
 def _days_between(a: str, b: str) -> int:
@@ -160,7 +163,8 @@ def build():
 
 if __name__ == "__main__":
     data = build()
-    with open("dashboard_data.json", "w") as f:
+    out_path = Path(__file__).resolve().parent / "dashboard_data.json"
+    with open(out_path, "w") as f:
         json.dump(data, f, ensure_ascii=False)
     print(f"brands={len(data['brands'])} model_lines={len(data['model_lines'])} "
           f"table_rows={len(data['table'])}")

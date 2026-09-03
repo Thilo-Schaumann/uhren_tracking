@@ -11,7 +11,8 @@ from pathlib import Path
 
 from PIL import Image
 
-CACHE_PATH = Path("thumbnails_cache.json")
+HERE = Path(__file__).resolve().parent
+CACHE_PATH = HERE.parent / "data" / "thumbnails_cache.json"
 MAX_SIZE = 160
 JPEG_QUALITY = 68
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; watch-price-tracker/1.0)"}
@@ -47,7 +48,7 @@ def build_cache(urls: list[str]) -> dict:
 
 
 if __name__ == "__main__":
-    data = json.loads(Path("dashboard_data.json").read_text())
+    data = json.loads((HERE / "dashboard_data.json").read_text())
     urls = list({m["image_url"] for m in data["model_lines"] if m.get("image_url")})
     build_cache(urls)
     print("done, cache size:", len(json.loads(CACHE_PATH.read_text())))

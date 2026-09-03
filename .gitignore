@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
-dashboard_data.json
-dashboard.html
-thumbnails_cache.json
-backup/
+.DS_Store
+scripts/dashboard_data.json
+scripts/dashboard.html
+data/thumbnails_cache.json
+data/backup/
