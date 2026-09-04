@@ -857,10 +857,10 @@ function moonSceneSvg(illumination, waxing) {
     [148, 52, 2.6], [40, 108, 2.6], [212, 50, 4.2], [232, 76, 3],
   ];
   const starsHtml = stars.map(([x, y, s]) => sparkle4(x, y, s)).join("");
-  // Small, tightly-curved hill bumps — more of them, smaller radius each, so
-  // the bottom edge reads as a series of distinct, pronounced rounded scallops.
-  const hills = [[40, 16], [84, 22], [128, 14], [172, 20], [216, 15], [260, 18]]
-    .map(([x, dy]) => `<circle cx="${x}" cy="${B + dy}" r="48" fill="var(--card)"/>`).join("");
+  // Exactly three hill bumps, but each pulled deep into the dome for a
+  // strongly pronounced curve rather than a shallow wave.
+  const hills = [[68, 36], [150, 28], [232, 36]]
+    .map(([x, dy]) => `<circle cx="${x}" cy="${B + dy}" r="85" fill="var(--card)"/>`).join("");
   return `<svg width="100%" viewBox="0 0 ${W} ${H}">
     <defs><clipPath id="${clipId}"><path d="${domePath}"/></clipPath></defs>
     <path d="${domePath}" fill="${MOON_SKY}"/>
