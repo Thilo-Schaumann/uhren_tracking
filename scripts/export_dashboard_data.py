@@ -1,6 +1,7 @@
 """Exports watches.db into the JSON shape the dashboard artifact embeds.
 Run this (from the project root), then build_dashboard.py to produce dashboard.html."""
 import json
+import re
 import sys
 from collections import defaultdict
 from datetime import date
@@ -14,6 +15,48 @@ THUMBNAIL_CACHE = DATA_DIR / "thumbnails_cache.json"
 MODEL_VARIANTS = DATA_DIR / "model_variants.json"
 BRAND_LOGOS = DATA_DIR / "brand_logos.json"
 OFFICIAL_PRICES = DATA_DIR / "official_prices.json"
+
+
+def _normalize_ref(ref: str) -> str:
+    """Reference numbers get formatted inconsistently across sources
+    ("126710 BLNR" vs "126710BLNR", "PAM368" vs "PAM00368") — normalize
+    for matching without touching dashes/dots, which often distinguish
+    genuinely different references (e.g. Patek "5712R-001" vs "-010")."""
+    if not ref:
+        return ""
+    r = ref.strip().upper().replace(" ", "")
+    m = re.match(r"^PAM0*(\d+)$", r)
+    if m:
+        return f"PAM{int(m.group(1)):05d}"
+    return r
+
+
+def _load_cluster_specs() -> dict:
+    """Merges every data/cluster_specs_*.json (one per researched brand) into
+    a single {(brand, normalized_ref): {case_material, bezel_material,
+    bracelet_type, size_mm}} lookup."""
+    specs = {}
+    for path in DATA_DIR.glob("cluster_specs_*.json"):
+        for entry in json.loads(path.read_text()):
+            key = (entry["brand"], _normalize_ref(entry["reference_number"]))
+            specs[key] = {k: v for k, v in entry.items() if k not in ("brand", "reference_number")}
+    return specs
+
+
+def _cluster_label(model_line: str, spec: dict | None) -> str:
+    """A model line (e.g. "GMT-Master II") isn't a valid comparison unit on its
+    own — steel/ceramic/Oyster and white-gold/Jubilee variants of the "same"
+    model line are completely different, non-comparable watches. Where we have
+    researched specs for the exact reference, fold them into the label so each
+    genuinely comparable configuration gets its own cluster; otherwise fall
+    back to the bare model line."""
+    if not spec:
+        return model_line
+    parts = [spec.get("case_material"), spec.get("bezel_material"), spec.get("bracelet_type")]
+    parts = [p for p in parts if p]
+    if not parts:
+        return model_line
+    return f"{model_line} {'/'.join(parts)}"
 
 
 def _days_between(a: str, b: str) -> int:
@@ -30,6 +73,7 @@ def _stats(days: list[int]) -> dict:
 def build():
     conn = connect()
     thumbnails = json.loads(THUMBNAIL_CACHE.read_text()) if THUMBNAIL_CACHE.exists() else {}
+    cluster_specs = _load_cluster_specs()
     nicknames = defaultdict(list)
     if MODEL_VARIANTS.exists():
         for v in json.loads(MODEL_VARIANTS.read_text()):
@@ -42,6 +86,12 @@ def build():
             official_prices[(p["brand"], p["reference_number"])] = {
                 "price": p["price"], "source": p["source"],
             }
+
+    def spec_of(brand: str, ref: str) -> dict:
+        return cluster_specs.get((brand, _normalize_ref(ref)), {}) if ref else {}
+
+    def cluster_of(brand: str, model_line: str, ref: str) -> str:
+        return _cluster_label(model_line, spec_of(brand, ref))
 
     active = conn.execute("""
         SELECT l.brand, l.model_line, l.reference_number, p.price, p.currency, l.platform,
@@ -56,39 +106,40 @@ def build():
         FROM listings WHERE status = 'sold' AND brand IS NOT NULL AND model_line IS NOT NULL
     """).fetchall()
 
-    all_time_counts = conn.execute("""
-        SELECT brand, model_line, COUNT(*) FROM listings
+    all_time = conn.execute("""
+        SELECT brand, model_line, reference_number FROM listings
         WHERE brand IS NOT NULL AND model_line IS NOT NULL
-        GROUP BY brand, model_line
     """).fetchall()
 
-    sold_days_by_line = defaultdict(list)
+    sold_days_by_cluster = defaultdict(list)
     sold_days_by_ref = defaultdict(list)
     for brand, model_line, ref, first_seen, last_seen in sold:
         days = _days_between(first_seen, last_seen)
-        sold_days_by_line[(brand, model_line)].append(days)
+        sold_days_by_cluster[(brand, cluster_of(brand, model_line, ref))].append(days)
         if ref:
-            sold_days_by_ref[(brand, model_line, ref)].append(days)
+            sold_days_by_ref[(brand, cluster_of(brand, model_line, ref), ref)].append(days)
 
     grouped = defaultdict(list)
     for row in active:
         (brand, model_line, ref, price, currency, platform, condition, year,
          band, dial, image, url) = row
-        grouped[(brand, model_line)].append({
+        cluster = cluster_of(brand, model_line, ref)
+        grouped[(brand, cluster)].append({
             "reference_number": ref, "price": price, "currency": currency,
             "platform": platform, "condition": condition, "year": year,
             "band_material": band, "dial_color": dial,
+            "case_material": spec_of(brand, ref).get("case_material"),
             "image_url": thumbnails.get(image, image), "url": url,
             "nickname": nicknames.get((brand, ref)),
         })
 
     model_lines = []
-    for (brand, model_line), listings in grouped.items():
+    for (brand, cluster), listings in grouped.items():
         prices = [item["price"] for item in listings if item["price"] is not None]
         ref_stats = {
             ref: _stats(days)
-            for (b, ml, ref), days in sold_days_by_ref.items()
-            if b == brand and ml == model_line
+            for (b, cl, ref), days in sold_days_by_ref.items()
+            if b == brand and cl == cluster
         }
         official = {
             item["reference_number"]: official_prices[(brand, item["reference_number"])]
@@ -97,12 +148,12 @@ def build():
         }
         model_lines.append({
             "brand": brand,
-            "model_line": model_line,
+            "model_line": cluster,
             "count": len(listings),
             "price_min": min(prices) if prices else None,
             "price_max": max(prices) if prices else None,
             "image_url": next((item["image_url"] for item in listings if item["image_url"]), None),
-            **_stats(sold_days_by_line.get((brand, model_line), [])),
+            **_stats(sold_days_by_cluster.get((brand, cluster), [])),
             "ref_stats": ref_stats,
             "official_prices": official,
             "listings": listings,
@@ -133,8 +184,11 @@ def build():
     ]
     brand_list.sort(key=lambda b: -b["active_count"])
 
+    all_time_counts = defaultdict(int)
+    for brand, model_line, ref in all_time:
+        all_time_counts[(brand, cluster_of(brand, model_line, ref))] += 1
     top10 = sorted(
-        [{"brand": b, "model_line": ml, "count": c} for b, ml, c in all_time_counts],
+        [{"brand": b, "model_line": cl, "count": c} for (b, cl), c in all_time_counts.items()],
         key=lambda x: -x["count"],
     )[:10]
 
@@ -146,6 +200,7 @@ def build():
             "currency": item["currency"], "platform": item["platform"],
             "condition": item["condition"], "year": item["year"],
             "band_material": item["band_material"], "dial_color": item["dial_color"],
+            "case_material": item["case_material"],
             "url": item["url"],
             "official_price": m["official_prices"].get(item["reference_number"], {}).get("price"),
         }

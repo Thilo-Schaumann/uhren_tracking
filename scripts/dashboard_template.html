@@ -232,6 +232,7 @@
           <th data-key="platform">Shop</th>
           <th data-key="condition">Zustand</th>
           <th data-key="year">Jahr</th>
+          <th data-key="case_material">Gehäuse</th>
           <th data-key="band_material">Band</th>
           <th data-key="dial_color">Zifferblatt</th>
           <th>Angebot</th>
@@ -310,7 +311,7 @@ function renderAxisChart(items, opts) {
   const height = opts.height || 44;
   const gridlinesHtml = ticks.map(t => `<div class="gridline" style="bottom:${t / axisMax * 100}%"></div>`).join("");
   const barsHtml = items.map(it => it.price == null ? "" : `
-    <div class="bar" style="height:${Math.max(6, it.price / axisMax * height)}px; background:var(${it.colorVar})" title="${it.title}">
+    <div class="bar" data-url="${it.url || ""}" style="height:${Math.max(6, it.price / axisMax * height)}px; background:var(${it.colorVar}); cursor:${it.url ? "pointer" : "default"};" title="${it.title}${it.url ? " — anklicken für Angebot" : ""}">
       ${opts.showPriceLabel ? `<div class="bar-price num">${fmtPrice(it.price)}</div>` : ""}
     </div>`).join("");
   const labelsHtml = ticks.slice().reverse().map(t => `<div>${new Intl.NumberFormat("de-DE", {notation:"compact"}).format(t)}</div>`).join("");
@@ -406,7 +407,7 @@ function renderFavoriteTile(fav) {
       ${(() => {
         const official = m && fav.reference_number ? m.official_prices[fav.reference_number] : null;
         return renderAxisChart(
-          listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${PLATFORM_LABEL[l.platform]}: ${fmtPrice(l.price)}` })),
+          listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${PLATFORM_LABEL[l.platform]}: ${fmtPrice(l.price)}`, url: l.url })),
           { height: 44, referenceLine: official ? { value: official.price, label: official.source } : null }
         );
       })()}
@@ -594,7 +595,7 @@ function toggleDrilldown(brand, modelLine, cardEl) {
       ${["grimmeissen", "rothfuss", "cologne_watch"].map(p => `<span class="item"><span class="dot" style="background:var(${PLATFORM_COLOR_VAR[p]})"></span>${PLATFORM_LABEL[p]}</span>`).join("")}
     </div>
     <div class="drilldown-chart">
-      ${renderAxisChart(m.listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${l.reference_number || ""} ${PLATFORM_LABEL[l.platform]}` })), { height: 90, showPriceLabel: true })}
+      ${renderAxisChart(m.listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${l.reference_number || ""} ${PLATFORM_LABEL[l.platform]}`, url: l.url })), { height: 90, showPriceLabel: true })}
     </div>
     <div class="ref-list">
       ${Object.entries(refs).map(([ref, items]) => {
@@ -704,6 +705,7 @@ function renderTable() {
       <td>${PLATFORM_LABEL[r.platform] || r.platform}</td>
       <td>${r.condition || "–"}</td>
       <td class="num">${r.year || "–"}</td>
+      <td>${r.case_material || "–"}</td>
       <td>${r.band_material || "–"}</td>
       <td>${r.dial_color || "–"}</td>
       <td>${r.url ? `<a href="${r.url}" target="_blank" rel="noopener">Angebot ↗</a>` : "–"}</td>
@@ -725,6 +727,12 @@ function renderAll() {
   renderBrandsRoot();
   renderTable();
 }
+
+// Clicking a price bar opens its listing — delegated once, works for bars added later.
+document.addEventListener("click", (e) => {
+  const bar = e.target.closest(".bar[data-url]");
+  if (bar && bar.dataset.url) window.open(bar.dataset.url, "_blank", "noopener");
+});
 
 (async () => {
   try { db = await claude.use("db"); } catch (e) { db = null; }
