@@ -813,41 +813,69 @@ function moonLitPath(cx, cy, r, illumination, waxing) {
 }
 
 const MOON_SKY = "#1c3a5e";
+const MOON_DARK = "#2c4a71";
 const MOON_LIGHT = "#efece3";
+
+// Standard 5-point star polygon: 10 vertices alternating outer/inner radius, 36° apart.
+function star5(cx, cy, outerR) {
+  const innerR = outerR * 0.45;
+  let d = "";
+  for (let i = 0; i < 10; i++) {
+    const rr = i % 2 === 0 ? outerR : innerR;
+    const angle = -Math.PI / 2 + i * Math.PI / 5;
+    const x = cx + rr * Math.cos(angle), y = cy + rr * Math.sin(angle);
+    d += (i === 0 ? "M" : "L") + x.toFixed(1) + "," + y.toFixed(1);
+  }
+  return `<path d="${d}Z" fill="#ffffff"/>`;
+}
+
+// The moon is always a full circle in outline — a dark base disc (its own
+// night side, not just background) with the lit region overlaid on top using
+// the terminator-arc formula, plus a few faint craters for texture.
+function moonGraphic(cx, cy, r, illumination, waxing, withCraters) {
+  const clipId = "moonClip" + Math.round(cx * 10) + "_" + Math.round(cy * 10);
+  const craters = withCraters ? [[-0.3, -0.22, 0.16], [0.14, 0.3, 0.12], [-0.05, 0.08, 0.09], [0.32, -0.1, 0.07]]
+    .map(([dx, dy, dr]) => `<circle cx="${cx + dx * r}" cy="${cy + dy * r}" r="${dr * r}" fill="${MOON_DARK}" opacity="0.3"/>`).join("") : "";
+  return `<defs><clipPath id="${clipId}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath></defs>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="${MOON_DARK}"/>
+    <path d="${moonLitPath(cx, cy, r, illumination, waxing)}" fill="${MOON_LIGHT}"/>
+    <g clip-path="url(#${clipId})">${craters}</g>`;
+}
 
 // Small dome badge for the header button: sky arch + moon, no stars/hills (too fine at this size).
 function moonIconSvg(size, illumination, waxing) {
-  const cx = size / 2, R = size / 2 - 1, B = size - 1.5;
-  const domePath = `M ${cx - R} ${B} A ${R} ${R} 0 0 1 ${cx + R} ${B} Z`;
-  const moonR = R * 0.52, moonCx = cx + R * 0.1, moonCy = B - R * 0.62;
+  const cx = size / 2, rx = size / 2 - 1, ry = rx * 1.15, B = size - 1.5;
+  const domePath = `M ${cx - rx} ${B} A ${rx} ${ry} 0 0 1 ${cx + rx} ${B} Z`;
+  const moonR = rx * 0.5, moonCx = cx + rx * 0.08, moonCy = B - ry * 0.6;
   return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
     <path d="${domePath}" fill="${MOON_SKY}"/>
-    <path d="${moonLitPath(moonCx, moonCy, moonR, illumination, waxing)}" fill="${MOON_LIGHT}"/>
+    ${moonGraphic(moonCx, moonCy, moonR, illumination, waxing, false)}
   </svg>`;
 }
 
 // Full scene for the popover: sky-arch "aperture" with stars, the moon, and a
-// scalloped hill silhouette masking the bottom edge — modelled on how a real
-// moonphase complication's window looks, not a literal copy of any one watch.
+// scalloped hill silhouette masking the bottom edge — the standard way a
+// moonphase complication's window looks on countless watch dials, not a
+// literal copy of any one watch or publication's specific artwork.
 function moonSceneSvg(illumination, waxing) {
-  const W = 300, H = 190, cx = 150, R = 118, B = 150;
-  const domePath = `M ${cx - R} ${B} A ${R} ${R} 0 0 1 ${cx + R} ${B} Z`;
-  const moonR = 44, moonCx = 188, moonCy = 96;
+  const W = 300, H = 200, cx = 150, rx = 118, ry = rx * 1.15, B = 158;
+  const domePath = `M ${cx - rx} ${B} A ${rx} ${ry} 0 0 1 ${cx + rx} ${B} Z`;
+  const moonR = 42, moonCx = 186, moonCy = 100;
   const clipId = "moonDomeClip";
-  const bigStars = [[74, 58], [206, 50], [116, 100]];
-  const dots = [[52, 78], [96, 52], [142, 66], [172, 44], [222, 76], [238, 100], [64, 108], [200, 108]];
-  const starsHtml = bigStars.map(([x, y]) => `<text x="${x}" y="${y}" font-size="13" text-anchor="middle" fill="#ffffff">✦</text>`).join("")
-    + dots.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${1 + (i % 3) * 0.5}" fill="#ffffff" opacity="${0.5 + (i % 3) * 0.15}"/>`).join("");
+  const bigStars = [[76, 60, 6], [204, 46, 5], [118, 96, 4.5]];
+  const smallStars = [[54, 82, 2.6], [98, 50, 2.3], [146, 66, 2.4], [174, 42, 2.2],
+    [224, 78, 2.6], [240, 104, 2.3], [66, 112, 2.4], [202, 112, 2.2]];
+  const starsHtml = bigStars.concat(smallStars).map(([x, y, s]) => star5(x, y, s)).join("");
   return `<svg width="100%" viewBox="0 0 ${W} ${H}">
     <defs><clipPath id="${clipId}"><path d="${domePath}"/></clipPath></defs>
     <path d="${domePath}" fill="${MOON_SKY}"/>
     <g clip-path="url(#${clipId})">
       ${starsHtml}
-      <path d="${moonLitPath(moonCx, moonCy, moonR, illumination, waxing)}" fill="${MOON_LIGHT}"/>
+      ${moonGraphic(moonCx, moonCy, moonR, illumination, waxing, true)}
     </g>
-    <circle cx="${cx - 62}" cy="228" r="90" fill="var(--card)"/>
-    <circle cx="${cx + 4}" cy="238" r="98" fill="var(--card)"/>
-    <circle cx="${cx + 70}" cy="222" r="86" fill="var(--card)"/>
+    <circle cx="${cx - 62}" cy="236" r="90" fill="var(--card)"/>
+    <circle cx="${cx + 4}" cy="246" r="98" fill="var(--card)"/>
+    <circle cx="${cx + 70}" cy="230" r="86" fill="var(--card)"/>
   </svg>`;
 }
 
