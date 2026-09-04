@@ -95,7 +95,8 @@ def build():
 
     active = conn.execute("""
         SELECT l.brand, l.model_line, l.reference_number, p.price, p.currency, l.platform,
-               l.condition, l.year, l.band_material, l.dial_color, l.image_url, l.url
+               l.condition, l.year, l.band_material, l.dial_color, l.has_papers, l.has_box,
+               l.image_url, l.url
         FROM listings l
         JOIN price_snapshots p ON p.listing_id = l.id AND p.date = l.last_seen
         WHERE l.status = 'active' AND l.brand IS NOT NULL AND l.model_line IS NOT NULL
@@ -122,12 +123,13 @@ def build():
     grouped = defaultdict(list)
     for row in active:
         (brand, model_line, ref, price, currency, platform, condition, year,
-         band, dial, image, url) = row
+         band, dial, has_papers, has_box, image, url) = row
         cluster = cluster_of(brand, model_line, ref)
         grouped[(brand, cluster)].append({
             "reference_number": ref, "price": price, "currency": currency,
             "platform": platform, "condition": condition, "year": year,
             "band_material": band, "dial_color": dial,
+            "has_papers": has_papers, "has_box": has_box,
             "case_material": spec_of(brand, ref).get("case_material"),
             "image_url": thumbnails.get(image, image), "url": url,
             "nickname": nicknames.get((brand, ref)),
@@ -201,6 +203,7 @@ def build():
             "condition": item["condition"], "year": item["year"],
             "band_material": item["band_material"], "dial_color": item["dial_color"],
             "case_material": item["case_material"],
+            "has_papers": item["has_papers"], "has_box": item["has_box"],
             "url": item["url"],
             "official_price": m["official_prices"].get(item["reference_number"], {}).get("price"),
         }

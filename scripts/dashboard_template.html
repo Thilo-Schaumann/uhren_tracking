@@ -236,6 +236,8 @@
           <th data-key="case_material">Gehäuse</th>
           <th data-key="band_material">Band</th>
           <th data-key="dial_color">Zifferblatt</th>
+          <th data-key="has_papers">Papiere</th>
+          <th data-key="has_box">Box</th>
           <th>Angebot</th>
         </tr></thead>
         <tbody id="tableBody"></tbody>
@@ -730,6 +732,8 @@ function renderTable() {
       <td>${r.case_material || "–"}</td>
       <td>${r.band_material || "–"}</td>
       <td>${r.dial_color || "–"}</td>
+      <td>${r.has_papers == null ? "–" : (r.has_papers ? "✓" : "✗")}</td>
+      <td>${r.has_box == null ? "–" : (r.has_box ? "✓" : "✗")}</td>
       <td>${r.url ? `<a href="${r.url}" target="_blank" rel="noopener">Angebot ↗</a>` : "–"}</td>
     </tr>
   `).join("");
