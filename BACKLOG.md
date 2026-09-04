@@ -29,8 +29,22 @@ neue Wünsche werden unter "Offen" ergänzt, erledigte Punkte wandern nach
 - Seite 2 Marken: Marken-Kacheln (Logo-dominant) → Klick → Marke-Modelle-Seite
   (eine Kachel je Cluster) → Klick → **eigene Subseite** mit Balkendiagramm +
   Referenzliste (kein Inline-Aufklappen)
-- Seite 3 Tabelle: durchsuchbar, sortierbar, Filter (Marke/Modellreihe/
-  Spitzname/Referenz), Spalten inkl. Gehäusematerial, Angebot-Link
+- Seite 3 Tabelle: durchsuchbar, sortierbar, Spalten inkl. Gehäuse-/
+  Lünettenmaterial, Komplikation, Papiere/Box, Angebot-Link
+- **Komplikation als SSOT-Feld**: `listings.complication` (neue Spalte),
+  befüllt für alle aktiven Angebote — Grimmeissen aus dem strukturierten
+  "Funktionen"-Feld, Rothfuss/Cologne Watch per Stichwortsuche im Freitext
+  (Chronograph/GMT/Tourbillon/Mondphase/Ewiger Kalender/etc., Liste in
+  `scrapers/specs.py::COMPLICATIONS`)
+- **Alle Filter aus der Diskussion umgesetzt**, auf Marken-/Modell-Ansicht UND
+  Tabelle: Modellfamilie (rohe Modelllinie vor Cluster-Bildung, damit z.B.
+  "Royal Oak" markenübergreifend über alle Materialvarianten gefiltert werden
+  kann), Gehäusematerial, Lünettenmaterial, Armbandtyp, Zifferblattfarbe,
+  Zustand, Komplikation, Papiere (ja/nein), Box (ja/nein); Preisspanne
+  (<10k/10-25k/25-50k/50-100k/>100k) nur auf der Tabelle (Cluster-Kacheln
+  zeigen ohnehin schon eine Preisspanne, ein einzelner Bucket pro Kachel wäre
+  nicht sinnvoll). Auf Cluster-Ebene (Marken-Seite) wird pro Filterfeld der
+  erste bekannte Wert innerhalb des Clusters als Repräsentant verwendet
 - Favoriten persistieren live über die `db`-Capability der Artifact-Seite
   (nicht in `watches.db` — siehe Entscheidungen)
 - Balkendiagramme: adaptive Preisskala (nice-rounded Schritte), Balken sind
@@ -87,6 +101,19 @@ gilt das hier, nicht eine Vermutung:
 
 ## Offen
 
+- **Bilderkennungs-Pilot für Zifferblatt-/Lünettenfarbe**: Text-Recherche
+  bleibt Methode Nr. 1, Bilderkennung nur als Fallback wenn Text nichts
+  liefert. Pilot **ausschließlich Rolex** (Submariner, GMT-Master II,
+  Daytona) — erst Zeit-/Token-Kosten messen und dem Nutzer berichten, bevor
+  über eine Ausweitung entschieden wird. Muss pro Wert nachvollziehbar
+  machen, ob er aus Text oder Bilderkennung stammt (Spalte/Kennzeichnung,
+  Umsetzung noch offen)
+- **7-Modell-Tiefenrecherche (Varianten-Erkennung, z.B. Sub mit grüner
+  Lünette + grünem Zifferblatt)**: Rolex Submariner/GMT-Master II/Daytona,
+  AP Royal Oak, Patek Nautilus, Omega Speedmaster (Panda-Zifferblätter),
+  Tudor Black Bay (Lünettenfarben) — freigegeben, noch nicht begonnen.
+  Bilderkennung dabei nur für die 3 Rolex-Modelle, die anderen 4 vorerst
+  nur Text-Recherche
 - **Täglicher Dashboard-Auto-Refresh**: einmal besprochen, aber nie
   eingerichtet. Aktuell aktualisiert sich das Dashboard nur, wenn Claude es
   manuell neu baut und veröffentlicht — der tägliche GitHub-Scrape läuft

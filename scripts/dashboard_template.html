@@ -234,8 +234,10 @@
           <th data-key="condition">Zustand</th>
           <th data-key="year">Jahr</th>
           <th data-key="case_material">Gehäuse</th>
+          <th data-key="bezel_material">Lünette</th>
           <th data-key="band_material">Band</th>
           <th data-key="dial_color">Zifferblatt</th>
+          <th data-key="complication">Komplikation</th>
           <th data-key="has_papers">Papiere</th>
           <th data-key="has_box">Box</th>
           <th>Angebot</th>
@@ -270,8 +272,32 @@ const PLATFORM_COLOR_VAR = { grimmeissen: "--p-grimmeissen", rothfuss: "--p-roth
 let favorites = [];
 let db = null;
 let brandsView = { mode: "grid", brand: null }; // mode: "grid" | "detail"
-let brandsFilter = { brand: "", model_line: "", nickname: "", reference: "" };
-let tableFilter = { brand: "", model_line: "", nickname: "" };
+
+const CATEGORY_FILTERS = [
+  { key: "family", label: "Modellfamilie" },
+  { key: "case_material", label: "Gehäuse" },
+  { key: "bezel_material", label: "Lünette" },
+  { key: "bracelet_type", label: "Armband" },
+  { key: "dial_color", label: "Zifferblatt" },
+  { key: "condition", label: "Zustand" },
+  { key: "complication", label: "Komplikation" },
+];
+const BOOL_FILTERS = [
+  { key: "has_papers", label: "Papiere" },
+  { key: "has_box", label: "Box" },
+];
+const PRICE_BUCKET_ORDER = ["< 10.000 €", "10.000–25.000 €", "25.000–50.000 €", "50.000–100.000 €", "> 100.000 €"];
+
+function emptyFilterState(extra) {
+  const state = { brand: "", model_line: "", nickname: "", reference: "" };
+  CATEGORY_FILTERS.forEach(f => state[f.key] = "");
+  BOOL_FILTERS.forEach(f => state[f.key] = "");
+  if (extra) extra.forEach(k => state[k] = "");
+  return state;
+}
+
+let brandsFilter = emptyFilterState();
+let tableFilter = emptyFilterState(["price_bucket"]);
 
 document.getElementById("generatedAt").textContent = DATA.generated_at;
 
@@ -455,6 +481,12 @@ function allNicknames(brand, modelLine) {
   return [...set].sort();
 }
 
+function distinctValues(records, key) {
+  const set = new Set();
+  records.forEach(r => { if (r[key]) set.add(r[key]); });
+  return [...set].sort();
+}
+
 function renderFilterBar(container, state, onChange, opts) {
   opts = opts || {};
   const lockedBrand = opts.lockedBrand || null;
@@ -462,12 +494,34 @@ function renderFilterBar(container, state, onChange, opts) {
   const brands = [...new Set(DATA.model_lines.map(m => m.brand))].sort();
   const modelLines = [...new Set(DATA.model_lines.filter(m => !effectiveBrand || m.brand === effectiveBrand).map(m => m.model_line))].sort();
   const nicknames = allNicknames(effectiveBrand, state.model_line);
-  const activeFilterCount = (state.model_line ? 1 : 0) + (state.nickname ? 1 : 0) + (state.reference ? 1 : 0) + (!lockedBrand && state.brand ? 1 : 0);
+  const allSource = opts.source || DATA.model_lines;
+  const source = effectiveBrand ? allSource.filter(r => r.brand === effectiveBrand) : allSource;
+  const extraFields = CATEGORY_FILTERS.concat(opts.priceBucket ? [{ key: "price_bucket", label: "Preisspanne", order: PRICE_BUCKET_ORDER }] : []);
+
+  const extraSelectsHtml = extraFields.map(f => {
+    const values = f.order ? f.order.filter(v => source.some(r => r[f.key] === v)) : distinctValues(source, f.key);
+    if (!values.length) return "";
+    return `<select data-f="${f.key}"><option value="">${f.label}: alle</option>${values.map(v => `<option value="${v}" ${state[f.key]===v?"selected":""}>${v}</option>`).join("")}</select>`;
+  }).join("");
+
+  const boolSelectsHtml = BOOL_FILTERS.map(f => `
+    <select data-f="${f.key}">
+      <option value="">${f.label}: alle</option>
+      <option value="1" ${state[f.key]==="1"?"selected":""}>${f.label}: ja</option>
+      <option value="0" ${state[f.key]==="0"?"selected":""}>${f.label}: nein</option>
+    </select>`).join("");
+
+  const activeFilterCount = (state.model_line ? 1 : 0) + (state.nickname ? 1 : 0) + (state.reference ? 1 : 0) + (!lockedBrand && state.brand ? 1 : 0)
+    + extraFields.reduce((n, f) => n + (state[f.key] ? 1 : 0), 0)
+    + BOOL_FILTERS.reduce((n, f) => n + (state[f.key] ? 1 : 0), 0);
+
   container.innerHTML = `
     ${lockedBrand ? "" : `<select data-f="brand"><option value="">Alle Marken</option>${brands.map(b => `<option value="${b}" ${state.brand===b?"selected":""}>${b}</option>`).join("")}</select>`}
     <select data-f="model_line"><option value="">Alle Modellreihen</option>${modelLines.map(m => `<option value="${m}" ${state.model_line===m?"selected":""}>${m}</option>`).join("")}</select>
     <select data-f="nickname"><option value="">Alle Spitznamen</option>${nicknames.map(n => `<option value="${n}" ${state.nickname===n?"selected":""}>${n}</option>`).join("")}</select>
     ${opts.reference !== false ? `<input type="text" data-f="reference" placeholder="Referenznummer" value="${state.reference || ""}">` : ""}
+    ${extraSelectsHtml}
+    ${boolSelectsHtml}
     ${activeFilterCount ? `<button class="btn ghost" data-f="clear">Filter zurücksetzen ✕</button>` : ""}
   `;
   container.querySelectorAll("select[data-f], input[data-f]").forEach(el => {
@@ -483,7 +537,18 @@ function modelLineMatchesFilter(m, state) {
   if (state.model_line && m.model_line !== state.model_line) return false;
   if (state.nickname && !m.listings.some(l => l.nickname === state.nickname)) return false;
   if (state.reference && !m.listings.some(l => (l.reference_number || "").toLowerCase().includes(state.reference.toLowerCase()))) return false;
+  for (const f of CATEGORY_FILTERS) {
+    if (state[f.key] && m[f.key] !== state[f.key]) return false;
+  }
+  for (const f of BOOL_FILTERS) {
+    if (state[f.key] !== "" && Boolean(m[f.key]) !== (state[f.key] === "1")) return false;
+  }
   return true;
+}
+
+function anyFilterActive(state) {
+  return Boolean(state.brand || state.model_line || state.nickname || state.reference
+    || CATEGORY_FILTERS.some(f => state[f.key]) || BOOL_FILTERS.some(f => state[f.key]));
 }
 
 // ---------- brands tab ----------
@@ -497,7 +562,7 @@ function renderBrandsRoot() {
 function renderBrandGrid(root) {
   const filterState = brandsFilter;
   const matchingLines = DATA.model_lines.filter(m => modelLineMatchesFilter(m, filterState));
-  const visibleBrands = filterState.brand || filterState.model_line || filterState.nickname || filterState.reference
+  const visibleBrands = anyFilterActive(filterState)
     ? new Set(matchingLines.map(m => m.brand))
     : null;
 
@@ -705,12 +770,19 @@ document.getElementById("fMSave").addEventListener("click", async () => {
 // ---------- table tab ----------
 let tableSort = { key: "brand", dir: 1 };
 function renderTable() {
-  renderFilterBar(document.getElementById("tableFilterBar"), tableFilter, renderTable, { reference: false });
+  renderFilterBar(document.getElementById("tableFilterBar"), tableFilter, renderTable, { reference: false, priceBucket: true, source: DATA.table });
   const q = document.getElementById("tableSearch").value.toLowerCase();
   let rows = DATA.table.filter(r => {
     if (tableFilter.brand && r.brand !== tableFilter.brand) return false;
     if (tableFilter.model_line && r.model_line !== tableFilter.model_line) return false;
     if (tableFilter.nickname && r.nickname !== tableFilter.nickname) return false;
+    for (const f of CATEGORY_FILTERS) {
+      if (tableFilter[f.key] && r[f.key] !== tableFilter[f.key]) return false;
+    }
+    if (tableFilter.price_bucket && r.price_bucket !== tableFilter.price_bucket) return false;
+    for (const f of BOOL_FILTERS) {
+      if (tableFilter[f.key] !== "" && Boolean(r[f.key]) !== (tableFilter[f.key] === "1")) return false;
+    }
     if (q && !Object.values(r).some(v => String(v || "").toLowerCase().includes(q))) return false;
     return true;
   });
@@ -730,8 +802,10 @@ function renderTable() {
       <td>${r.condition || "–"}</td>
       <td class="num">${r.year || "–"}</td>
       <td>${r.case_material || "–"}</td>
+      <td>${r.bezel_material || "–"}</td>
       <td>${r.band_material || "–"}</td>
       <td>${r.dial_color || "–"}</td>
+      <td>${r.complication || "–"}</td>
       <td>${r.has_papers == null ? "–" : (r.has_papers ? "✓" : "✗")}</td>
       <td>${r.has_box == null ? "–" : (r.has_box ? "✓" : "✗")}</td>
       <td>${r.url ? `<a href="${r.url}" target="_blank" rel="noopener">Angebot ↗</a>` : "–"}</td>

@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS listings (
     has_box INTEGER,
     band_material TEXT,
     dial_color TEXT,
+    complication TEXT,
     image_url TEXT,
     url TEXT NOT NULL,
     first_seen TEXT NOT NULL,
@@ -59,6 +60,7 @@ LISTING_COLUMNS_V2 = [
     ("band_material", "TEXT"),
     ("dial_color", "TEXT"),
     ("image_url", "TEXT"),
+    ("complication", "TEXT"),
 ]
 
 
@@ -88,16 +90,16 @@ def upsert_listing(conn: sqlite3.Connection, item: dict, today: str) -> int:
         item.get("brand"), item.get("model"), item.get("model_line"),
         item.get("reference_number"), item.get("condition"), item.get("year"),
         item.get("has_papers"), item.get("has_box"), item.get("band_material"),
-        item.get("dial_color"), item.get("image_url"),
+        item.get("dial_color"), item.get("complication"), item.get("image_url"),
     )
 
     if row is None:
         cur = conn.execute(
             """INSERT INTO listings
                (platform, external_id, seller, brand, model, model_line, reference_number,
-                condition, year, has_papers, has_box, band_material, dial_color, image_url,
-                url, first_seen, last_seen, status)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')""",
+                condition, year, has_papers, has_box, band_material, dial_color, complication,
+                image_url, url, first_seen, last_seen, status)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')""",
             (item["platform"], item["external_id"], item["seller"], *spec_fields,
              item["url"], today, today),
         )
@@ -108,7 +110,7 @@ def upsert_listing(conn: sqlite3.Connection, item: dict, today: str) -> int:
             """UPDATE listings SET last_seen = ?, status = 'active',
                brand = ?, model = ?, model_line = ?, reference_number = ?,
                condition = ?, year = ?, has_papers = ?, has_box = ?,
-               band_material = ?, dial_color = ?, image_url = ?
+               band_material = ?, dial_color = ?, complication = ?, image_url = ?
                WHERE id = ?""",
             (today, *spec_fields, listing_id),
         )

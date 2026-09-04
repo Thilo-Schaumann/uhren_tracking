@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 
 from .http import fetch_text
 from .model_line import extract_model_line
+from .specs import _first_match, COMPLICATIONS
 
 BASE_URL = "https://www.grimmeissen.de"
 BRANDS_URL = f"{BASE_URL}/de/marken"
@@ -17,6 +18,7 @@ _FIELD_MAP = {
     "armband": "band_material",
     "ziffernblatt": "dial_color",
     "lieferumfang": "_lieferumfang",  # split into has_papers/has_box below
+    "funktionen": "_funktionen",  # matched against COMPLICATIONS below
 }
 
 
@@ -43,6 +45,9 @@ def _fetch_detail_specs(detail_url: str) -> dict:
     lieferumfang = raw.pop("_lieferumfang", "")
     raw["has_papers"] = "papieren" in lieferumfang.lower() or "papiere" in lieferumfang.lower()
     raw["has_box"] = "box" in lieferumfang.lower()
+
+    funktionen = raw.pop("_funktionen", "")
+    raw["complication"] = _first_match(funktionen, COMPLICATIONS) if funktionen else None
     return raw
 
 

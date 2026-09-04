@@ -23,6 +23,13 @@ DIAL_COLORS = [
     "Gray", "Braun", "Brown", "Salmon", "Lachs", "Anthrazit", "Rosa", "Pink",
 ]
 
+COMPLICATIONS = [
+    "Perpetual Calendar", "Ewiger Kalender", "Annual Calendar", "Jahreskalender",
+    "Minute Repeater", "Répétition Minutes", "Split-Seconds Chronograph", "Rattrapante",
+    "World Time", "Weltzeituhr", "Chronograph", "Chrono", "GMT", "Tourbillon",
+    "Moonphase", "Mondphase", "Alarm", "Réveil", "Regulateur",
+]
+
 
 def _first_match(text: str, keywords: list[str]) -> str | None:
     for kw in sorted(keywords, key=len, reverse=True):
@@ -54,4 +61,5 @@ def extract_specs(text: str) -> dict:
         "has_box": has_box,
         "band_material": _first_match(text, BAND_MATERIALS),
         "dial_color": _first_match(text, DIAL_COLORS),
+        "complication": _first_match(text, COMPLICATIONS),
     }

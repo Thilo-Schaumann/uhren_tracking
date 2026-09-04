@@ -70,6 +70,24 @@ def _stats(days: list[int]) -> dict:
     }
 
 
+PRICE_BUCKETS = [
+    (0, 10_000, "< 10.000 €"),
+    (10_000, 25_000, "10.000–25.000 €"),
+    (25_000, 50_000, "25.000–50.000 €"),
+    (50_000, 100_000, "50.000–100.000 €"),
+    (100_000, float("inf"), "> 100.000 €"),
+]
+
+
+def _price_bucket(price: float | None) -> str | None:
+    if price is None:
+        return None
+    for lo, hi, label in PRICE_BUCKETS:
+        if lo <= price < hi:
+            return label
+    return None
+
+
 def build():
     conn = connect()
     thumbnails = json.loads(THUMBNAIL_CACHE.read_text()) if THUMBNAIL_CACHE.exists() else {}
@@ -96,7 +114,7 @@ def build():
     active = conn.execute("""
         SELECT l.brand, l.model_line, l.reference_number, p.price, p.currency, l.platform,
                l.condition, l.year, l.band_material, l.dial_color, l.has_papers, l.has_box,
-               l.image_url, l.url
+               l.complication, l.image_url, l.url
         FROM listings l
         JOIN price_snapshots p ON p.listing_id = l.id AND p.date = l.last_seen
         WHERE l.status = 'active' AND l.brand IS NOT NULL AND l.model_line IS NOT NULL
@@ -121,18 +139,25 @@ def build():
             sold_days_by_ref[(brand, cluster_of(brand, model_line, ref), ref)].append(days)
 
     grouped = defaultdict(list)
+    family_of_cluster = {}
     for row in active:
         (brand, model_line, ref, price, currency, platform, condition, year,
-         band, dial, has_papers, has_box, image, url) = row
+         band, dial, has_papers, has_box, complication, image, url) = row
         cluster = cluster_of(brand, model_line, ref)
+        family_of_cluster[(brand, cluster)] = model_line
+        spec = spec_of(brand, ref)
         grouped[(brand, cluster)].append({
             "reference_number": ref, "price": price, "currency": currency,
             "platform": platform, "condition": condition, "year": year,
             "band_material": band, "dial_color": dial,
             "has_papers": has_papers, "has_box": has_box,
-            "case_material": spec_of(brand, ref).get("case_material"),
+            "complication": complication,
+            "case_material": spec.get("case_material"),
+            "bezel_material": spec.get("bezel_material"),
+            "bracelet_type": spec.get("bracelet_type"),
             "image_url": thumbnails.get(image, image), "url": url,
             "nickname": nicknames.get((brand, ref)),
+            "price_bucket": _price_bucket(price),
         })
 
     model_lines = []
@@ -148,13 +173,31 @@ def build():
             for item in listings
             if item["reference_number"] and (brand, item["reference_number"]) in official_prices
         }
+
+        def _representative(field):
+            return next((item[field] for item in listings if item.get(field)), None)
+
+        def _representative_known(field):
+            """Like _representative, but for has_papers/has_box: False is a
+            meaningful known value, not "no data" — don't treat it as falsy."""
+            return next((item[field] for item in listings if item.get(field) is not None), None)
+
         model_lines.append({
             "brand": brand,
             "model_line": cluster,
+            "family": family_of_cluster[(brand, cluster)],
             "count": len(listings),
             "price_min": min(prices) if prices else None,
             "price_max": max(prices) if prices else None,
             "image_url": next((item["image_url"] for item in listings if item["image_url"]), None),
+            "case_material": _representative("case_material"),
+            "bezel_material": _representative("bezel_material"),
+            "bracelet_type": _representative("bracelet_type"),
+            "dial_color": _representative("dial_color"),
+            "condition": _representative("condition"),
+            "complication": _representative("complication"),
+            "has_papers": _representative_known("has_papers"),
+            "has_box": _representative_known("has_box"),
             **_stats(sold_days_by_cluster.get((brand, cluster), [])),
             "ref_stats": ref_stats,
             "official_prices": official,
@@ -196,13 +239,15 @@ def build():
 
     table = [
         {
-            "brand": m["brand"], "model_line": m["model_line"],
+            "brand": m["brand"], "model_line": m["model_line"], "family": m["family"],
             "reference_number": item["reference_number"], "nickname": item["nickname"],
             "price": item["price"],
             "currency": item["currency"], "platform": item["platform"],
             "condition": item["condition"], "year": item["year"],
             "band_material": item["band_material"], "dial_color": item["dial_color"],
             "case_material": item["case_material"],
+            "bezel_material": item["bezel_material"], "bracelet_type": item["bracelet_type"],
+            "complication": item["complication"], "price_bucket": item["price_bucket"],
             "has_papers": item["has_papers"], "has_box": item["has_box"],
             "url": item["url"],
             "official_price": m["official_prices"].get(item["reference_number"], {}).get("price"),
