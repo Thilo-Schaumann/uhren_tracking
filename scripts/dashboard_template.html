@@ -112,7 +112,7 @@
   .ref-line { position: absolute; left: 0; right: 0; border-top: 2px solid var(--ink); z-index: 2; }
   .ref-line-label { position: absolute; right: 0; bottom: 2px; background: var(--card); padding: 0 3px; font-size: 9.5px; color: var(--ink); white-space: nowrap; }
   .bars { position: relative; display: flex; align-items: flex-end; gap: 3px; height: 100%; }
-  .bar { flex: 1; border-radius: 3px 3px 1px 1px; min-width: 4px; position: relative; z-index: 1; }
+  .bar { flex: 1; border-radius: 3px 3px 1px 1px; min-width: 4px; position: relative; z-index: 1; display: block; text-decoration: none; color: inherit; }
 
   .brand-tile-list { display: flex; flex-direction: column; gap: 3px; font-size: 12.5px; color: var(--ink-secondary); }
   .brand-tile-list .row { display: flex; justify-content: space-between; }
@@ -155,11 +155,11 @@
   .model-card .star-row { display: flex; justify-content: flex-end; margin-top: -30px; margin-right: -2px; position: relative; z-index: 1; }
   .model-card .star-row .star-btn { margin: 0; padding: 8px; background: var(--card); border-radius: 50%; }
 
-  .drilldown { grid-column: 1 / -1; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-top: -2px; }
+  .drilldown-chart { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
   .drilldown-chart .bar-price { position: absolute; bottom: 100%; left: 0; right: 0; text-align: center; font-size: 10px; color: var(--ink-secondary); margin-bottom: 3px; }
   .legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-secondary); margin: 14px 0 12px; }
   .legend .item { display: flex; align-items: center; gap: 5px; }
-  .ref-list { display: flex; flex-direction: column; gap: 6px; }
+  .ref-list { display: flex; flex-direction: column; gap: 6px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-top: 16px; }
   .ref-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; padding: 6px 8px; border-radius: 6px; }
   .ref-row:nth-child(odd) { background: var(--plane); }
   .ref-row .ref { font-weight: 600; min-width: 90px; }
@@ -311,10 +311,15 @@ function renderAxisChart(items, opts) {
   for (let v = 0; v <= axisMax; v += step) ticks.push(v);
   const height = opts.height || 44;
   const gridlinesHtml = ticks.map(t => `<div class="gridline" style="bottom:${t / axisMax * 100}%"></div>`).join("");
-  const barsHtml = items.map(it => it.price == null ? "" : `
-    <div class="bar" data-url="${it.url || ""}" style="height:${Math.max(6, it.price / axisMax * height)}px; background:var(${it.colorVar}); cursor:${it.url ? "pointer" : "default"};" title="${it.title}${it.url ? " — anklicken für Angebot" : ""}">
+  const barsHtml = items.map(it => {
+    if (it.price == null) return "";
+    const tag = it.url ? "a" : "div";
+    const linkAttrs = it.url ? `href="${it.url}" target="_blank" rel="noopener"` : "";
+    return `
+    <${tag} class="bar" ${linkAttrs} style="height:${Math.max(6, it.price / axisMax * height)}px; background:var(${it.colorVar}); cursor:${it.url ? "pointer" : "default"};" title="${it.title}${it.url ? " — anklicken für Angebot" : ""}">
       ${opts.showPriceLabel ? `<div class="bar-price num">${fmtPrice(it.price)}</div>` : ""}
-    </div>`).join("");
+    </${tag}>`;
+  }).join("");
   const labelsHtml = ticks.slice().reverse().map(t => `<div>${new Intl.NumberFormat("de-DE", {notation:"compact"}).format(t)}</div>`).join("");
   const refLineHtml = refLine ? `
     <div class="ref-line" style="bottom:${refLine.value / axisMax * 100}%" title="${refLine.label}: ${fmtPrice(refLine.value)}">
@@ -483,6 +488,7 @@ function modelLineMatchesFilter(m, state) {
 function renderBrandsRoot() {
   const root = document.getElementById("brandsRoot");
   if (brandsView.mode === "grid") renderBrandGrid(root);
+  else if (brandsView.mode === "model") renderModelDetail(root, brandsView.brand, brandsView.modelLine);
   else renderBrandDetail(root, brandsView.brand);
 }
 
@@ -573,7 +579,10 @@ function renderBrandDetail(root, brand) {
       <div class="name">${m.model_line}</div>
       <div class="count num">${m.count} aktiv</div>
     `;
-    card.addEventListener("click", () => toggleDrilldown(m.brand, m.model_line, card));
+    card.addEventListener("click", () => {
+      brandsView = { mode: "model", brand: m.brand, modelLine: m.model_line, fromBrand: brand };
+      renderBrandsRoot();
+    });
     card.querySelector("[data-model-star]").addEventListener("click", (e) => {
       e.stopPropagation();
       toggleModelFavorite(m.brand, m.model_line, null);
@@ -582,31 +591,35 @@ function renderBrandDetail(root, brand) {
   });
 }
 
-function toggleDrilldown(brand, modelLine, cardEl) {
-  const existing = document.querySelector(".drilldown");
-  if (existing) existing.remove();
-  if (openDrilldown === brand + "|||" + modelLine) { openDrilldown = null; return; }
-  openDrilldown = brand + "|||" + modelLine;
-
+function renderModelDetail(root, brand, modelLine) {
   const m = findModelLine(brand, modelLine);
+  if (!m) { brandsView = { mode: "grid", brand: null }; renderBrandsRoot(); return; }
+
+  const isFav = favorites.some(f => f.type === "model" && f.brand === brand && f.model_line === modelLine && !f.reference_number);
   const refs = {};
   m.listings.forEach(l => { const k = l.reference_number || "—"; (refs[k] = refs[k] || []).push(l); });
 
-  const div = document.createElement("div");
-  div.className = "drilldown";
-  div.innerHTML = `
+  root.innerHTML = `
+    <div class="breadcrumb">
+      <button class="btn ghost" id="backToBrandDetail">← ${brand}</button>
+      <div class="brand-title">
+        ${m.image_url ? `<img src="${m.image_url}" alt="" style="height:32px; border-radius:6px; object-fit:cover;">` : ""}
+        ${modelLine}
+        <button class="star-btn ${isFav ? "on" : ""}" id="modelDetailStar">★</button>
+      </div>
+    </div>
     <div class="legend">
       ${["grimmeissen", "rothfuss", "cologne_watch"].map(p => `<span class="item"><span class="dot" style="background:var(${PLATFORM_COLOR_VAR[p]})"></span>${PLATFORM_LABEL[p]}</span>`).join("")}
     </div>
     <div class="drilldown-chart">
-      ${renderAxisChart(m.listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${l.reference_number || ""} ${PLATFORM_LABEL[l.platform]}`, url: l.url })), { height: 90, showPriceLabel: true })}
+      ${renderAxisChart(m.listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${l.reference_number || ""} ${PLATFORM_LABEL[l.platform]}`, url: l.url })), { height: 140, showPriceLabel: true })}
     </div>
     <div class="ref-list">
       ${Object.entries(refs).map(([ref, items]) => {
-        const isFav = ref !== "—" && favorites.some(f => f.type === "model" && f.brand === brand && f.model_line === modelLine && f.reference_number === ref);
+        const isRefFav = ref !== "—" && favorites.some(f => f.type === "model" && f.brand === brand && f.model_line === modelLine && f.reference_number === ref);
         return items.map(l => `
           <div class="ref-row">
-            ${ref !== "—" ? `<button class="star-btn ${isFav ? "on" : ""}" data-ref-star="${brand}|||${modelLine}|||${ref}">★</button>` : `<span style="width:22px;"></span>`}
+            ${ref !== "—" ? `<button class="star-btn ${isRefFav ? "on" : ""}" data-ref-star="${brand}|||${modelLine}|||${ref}">★</button>` : `<span style="width:22px;"></span>`}
             <span class="ref num">${ref}</span>
             ${l.nickname ? `<span class="nickname">${l.nickname}</span>` : ""}
             <span class="plat">${PLATFORM_LABEL[l.platform]}${l.condition ? " · " + l.condition : ""}${l.dial_color ? " · " + l.dial_color : ""}</span>
@@ -618,8 +631,13 @@ function toggleDrilldown(brand, modelLine, cardEl) {
       }).join("")}
     </div>
   `;
-  cardEl.closest(".model-grid").appendChild(div);
-  div.querySelectorAll("[data-ref-star]").forEach(btn => btn.addEventListener("click", () => { const [b, ml, ref] = btn.dataset.refStar.split("|||"); toggleModelFavorite(b, ml, ref); }));
+
+  document.getElementById("backToBrandDetail").addEventListener("click", () => {
+    brandsView = { mode: "detail", brand };
+    renderBrandsRoot();
+  });
+  document.getElementById("modelDetailStar").addEventListener("click", () => toggleModelFavorite(brand, modelLine, null));
+  root.querySelectorAll("[data-ref-star]").forEach(btn => btn.addEventListener("click", () => { const [b, ml, ref] = btn.dataset.refStar.split("|||"); toggleModelFavorite(b, ml, ref); }));
 }
 
 // ---------- favorites persistence ----------
@@ -731,12 +749,6 @@ function renderAll() {
   renderBrandsRoot();
   renderTable();
 }
-
-// Clicking a price bar opens its listing — delegated once, works for bars added later.
-document.addEventListener("click", (e) => {
-  const bar = e.target.closest(".bar[data-url]");
-  if (bar && bar.dataset.url) window.open(bar.dataset.url, "_blank", "noopener");
-});
 
 (async () => {
   try { db = await claude.use("db"); } catch (e) { db = null; }
