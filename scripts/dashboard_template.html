@@ -1,7 +1,7 @@
 <title>Zeitmarkt</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@1,600&display=swap" rel="stylesheet">
 <style>
   :root {
     color-scheme: light;
@@ -185,12 +185,32 @@
   .modal input { padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--plane); color: var(--ink); font-size: 13px; font-family: inherit; }
   .modal .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
   [hidden] { display: none !important; }
+
+  /* moon phase widget */
+  .moon-btn { background: var(--card); border: 1px solid var(--border); border-radius: 50%; width: 34px; height: 34px; padding: 0; flex-shrink: 0; overflow: hidden; display: flex; }
+  .moon-btn:hover { border-color: var(--accent); }
+  .moon-btn svg { width: 100%; height: 100%; display: block; }
+  .moon-modal { position: relative; background: var(--card); border-radius: 16px; padding: 30px 24px 22px; width: 100%; max-width: 320px; text-align: center; }
+  .moon-modal .moon-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--ink-muted); font-size: 16px; line-height: 1; padding: 8px; }
+  .moon-modal .moon-close:hover { color: var(--ink); }
+  .moon-modal .phase-name { font-family: "IBM Plex Serif", Georgia, serif; font-style: italic; font-weight: 600; font-size: 21px; }
+  .moon-modal .phase-sub { font-size: 12.5px; color: var(--ink-muted); margin-top: 3px; }
+  .moon-illustration-wrap { display: flex; justify-content: center; margin: 18px 0 20px; }
+  .moon-illustration-wrap svg { border-radius: 50%; }
+  .moon-stats { display: flex; border-top: 1px solid var(--gridline); padding-top: 14px; }
+  .moon-stats .stat { flex: 1; }
+  .moon-stats .stat + .stat { border-left: 1px solid var(--gridline); }
+  .moon-stats .stat .num { font-size: 19px; font-weight: 600; }
+  .moon-stats .stat .lbl { font-size: 10px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 3px; }
 </style>
 
 <div class="app">
   <div class="topbar">
     <h1>Zeitmarkt</h1>
-    <div class="meta">Daten vom <span id="generatedAt" class="num"></span> · Grimmeissen · Rothfuss · Cologne Watch</div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div class="meta">Daten vom <span id="generatedAt" class="num"></span> · Grimmeissen · Rothfuss · Cologne Watch</div>
+      <button class="moon-btn" id="moonBtn" title="Mondphase" aria-label="Mondphase anzeigen"></button>
+    </div>
   </div>
 
   <div class="tabs" role="tablist">
@@ -259,6 +279,19 @@
     <div class="actions">
       <button class="btn secondary" id="fMCancel">Abbrechen</button>
       <button class="btn" id="fMSave">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="moonModalBackdrop" hidden>
+  <div class="moon-modal">
+    <button class="moon-close" id="moonModalClose" aria-label="Schließen">✕</button>
+    <div class="phase-name" id="moonPhaseName"></div>
+    <div class="phase-sub" id="moonPhaseSub"></div>
+    <div class="moon-illustration-wrap" id="moonIllustrationWrap"></div>
+    <div class="moon-stats">
+      <div class="stat"><div class="num" id="moonAge"></div><div class="lbl">Mondalter (Tage)</div></div>
+      <div class="stat"><div class="num" id="moonTime"></div><div class="lbl">Uhrzeit (UTC)</div></div>
     </div>
   </div>
 </div>
@@ -746,6 +779,71 @@ async function loadFavorites() {
     favorites = snap.docs.map(d => d.data());
   } catch (e) {}
 }
+
+// ---------- moon phase ----------
+function moonPhaseInfo(date) {
+  const synodic = 29.530588853;
+  const knownNewMoon = Date.UTC(2000, 0, 6, 18, 14, 0);
+  let age = ((date.getTime() - knownNewMoon) / 86400000) % synodic;
+  if (age < 0) age += synodic;
+  const illumination = (1 - Math.cos(2 * Math.PI * age / synodic)) / 2;
+  const waxing = age < synodic / 2;
+  const p = age / synodic;
+  let phaseName;
+  if (p < 1/16 || p >= 15/16) phaseName = "Neumond";
+  else if (p < 3/16) phaseName = "Zunehmende Sichel";
+  else if (p < 5/16) phaseName = "Erstes Viertel";
+  else if (p < 7/16) phaseName = "Zunehmender Mond";
+  else if (p < 9/16) phaseName = "Vollmond";
+  else if (p < 11/16) phaseName = "Abnehmender Mond";
+  else if (p < 13/16) phaseName = "Letztes Viertel";
+  else phaseName = "Abnehmende Sichel";
+  return { age, illumination, waxing, phaseName };
+}
+
+// Two arcs of equal outer radius: a fixed hemisphere (the near side) plus a
+// terminator arc whose radius/sweep encode illumination — degenerates to a
+// straight line at quarter moons and to a full circle at new/full moon.
+function moonDiscSvg(size, illumination, waxing, withStars) {
+  const r = size / 2 - 1;
+  const cx = size / 2, cy = size / 2;
+  const a = r * (1 - 2 * illumination);
+  const sweep1 = waxing ? 1 : 0;
+  const sweep2 = a >= 0 ? sweep1 : (sweep1 === 1 ? 0 : 1);
+  const path = `M ${cx} ${cy - r} A ${r} ${r} 0 0 ${sweep1} ${cx} ${cy + r} A ${Math.abs(a)} ${r} 0 0 ${sweep2} ${cx} ${cy - r} Z`;
+  const starsHtml = withStars ? Array.from({ length: 7 }).map((_, i) => {
+    const sx = 8 + (i * 41) % (size - 16);
+    const sy = 6 + (i * 29) % Math.round(size * 0.4);
+    const sr = 1 + (i % 3) * 0.6;
+    return `<circle cx="${sx}" cy="${sy}" r="${sr}" fill="#ffffff" opacity="${0.45 + (i % 3) * 0.18}"/>`;
+  }).join("") : "";
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="#16294a"/>
+    ${starsHtml}
+    <path d="${path}" fill="#ece9e1"/>
+  </svg>`;
+}
+
+function updateMoonWidgets() {
+  const now = new Date();
+  const info = moonPhaseInfo(now);
+  document.getElementById("moonBtn").innerHTML = moonDiscSvg(34, info.illumination, info.waxing, false);
+  document.getElementById("moonPhaseName").textContent = info.phaseName;
+  document.getElementById("moonPhaseSub").textContent = Math.round(info.illumination * 100) + "% beleuchtet";
+  document.getElementById("moonIllustrationWrap").innerHTML = moonDiscSvg(180, info.illumination, info.waxing, true);
+  document.getElementById("moonAge").textContent = info.age.toFixed(1).replace(".", ",");
+  document.getElementById("moonTime").textContent = now.toISOString().slice(11, 16);
+}
+document.getElementById("moonBtn").addEventListener("click", () => {
+  updateMoonWidgets();
+  document.getElementById("moonModalBackdrop").hidden = false;
+});
+document.getElementById("moonModalClose").addEventListener("click", () => { document.getElementById("moonModalBackdrop").hidden = true; });
+document.getElementById("moonModalBackdrop").addEventListener("click", (e) => {
+  if (e.target.id === "moonModalBackdrop") document.getElementById("moonModalBackdrop").hidden = true;
+});
+updateMoonWidgets();
+setInterval(updateMoonWidgets, 60000);
 
 // ---------- add-favorite modal ----------
 const modalBackdrop = document.getElementById("addModalBackdrop");
