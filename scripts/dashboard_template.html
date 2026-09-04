@@ -826,27 +826,16 @@ function sparkle4(cx, cy, r) {
 // a soft-edged shadow (blurred) rather than a hard-edged half, closer to how
 // it actually reads on a watch dial than a flat two-tone split.
 function moonGraphic(cx, cy, r, illumination, waxing) {
-  const blurId = "moonBlur" + Math.round(cx * 10) + "_" + Math.round(cy * 10);
-  const clipId = "moonClip" + Math.round(cx * 10) + "_" + Math.round(cy * 10);
-  // Stylized, not linear: keeps the shadow reading as a soft accent rather
-  // than a literal half-tone split, closer to how it looks on an actual dial.
-  const visualDark = Math.pow(1 - illumination, 1.6);
-  const shadowPath = moonLitPath(cx, cy, r, visualDark, !waxing);
-  return `<defs>
-      <clipPath id="${clipId}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath>
-      <filter id="${blurId}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="${r * 0.14}"/></filter>
-    </defs>
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="${MOON_LIGHT}"/>
-    <g clip-path="url(#${clipId})">
-      <path d="${shadowPath}" fill="${MOON_SKY}" opacity="0.78" filter="url(#${blurId})"/>
-    </g>`;
+  // Flat, uniform moon color — no shading/gradient/blur. Phase is
+  // communicated by the phase name and % text, not by shading the disc.
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${MOON_LIGHT}"/>`;
 }
 
 // Small dome badge for the header button: sky arch + moon, no stars/hills (too fine at this size).
 function moonIconSvg(size, illumination, waxing) {
-  const cx = size / 2, rx = size / 2 - 1, ry = rx * 0.82, B = size - 1.5;
+  const cx = size / 2, rx = size / 2 - 1, ry = rx * 1.2, B = size - 1.5;
   const domePath = `M ${cx - rx} ${B} A ${rx} ${ry} 0 0 1 ${cx + rx} ${B} Z`;
-  const moonR = rx * 0.58, moonCx = cx + rx * 0.18, moonCy = B - ry * 0.72;
+  const moonR = rx * 0.46, moonCx = cx + rx * 0.1, moonCy = B - ry * 0.66;
   return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
     <path d="${domePath}" fill="${MOON_SKY}"/>
     ${moonGraphic(moonCx, moonCy, moonR, illumination, waxing)}
@@ -858,16 +847,20 @@ function moonIconSvg(size, illumination, waxing) {
 // moonphase complication's window looks on countless watch dials, not a
 // literal copy of any one watch or publication's specific artwork.
 function moonSceneSvg(illumination, waxing) {
-  const W = 300, H = 190, cx = 150, rx = 122, ry = rx * 0.82, B = 148;
+  const W = 300, H = 220, cx = 150, rx = 122, ry = rx * 1.23, B = 178;
   const domePath = `M ${cx - rx} ${B} A ${rx} ${ry} 0 0 1 ${cx + rx} ${B} Z`;
-  const moonR = 56, moonCx = 190, moonCy = 92;
+  const moonR = 52, moonCx = 180, moonCy = 100;
   const clipId = "moonDomeClip";
   const stars = [
     [58, 96, 6.5], [80, 62, 4.5], [104, 108, 5], [126, 70, 3.8], [66, 130, 4],
     [46, 70, 3.4], [96, 44, 3.2], [140, 96, 3], [118, 130, 3.6], [58, 44, 2.8],
-    [148, 52, 2.6], [40, 108, 2.6], [200, 46, 4.2], [222, 66, 3],
+    [148, 52, 2.6], [40, 108, 2.6], [212, 50, 4.2], [232, 76, 3],
   ];
   const starsHtml = stars.map(([x, y, s]) => sparkle4(x, y, s)).join("");
+  // Small, tightly-curved hill bumps — more of them, smaller radius each, so
+  // the bottom edge reads as a series of distinct, pronounced rounded scallops.
+  const hills = [[40, 16], [84, 22], [128, 14], [172, 20], [216, 15], [260, 18]]
+    .map(([x, dy]) => `<circle cx="${x}" cy="${B + dy}" r="48" fill="var(--card)"/>`).join("");
   return `<svg width="100%" viewBox="0 0 ${W} ${H}">
     <defs><clipPath id="${clipId}"><path d="${domePath}"/></clipPath></defs>
     <path d="${domePath}" fill="${MOON_SKY}"/>
@@ -875,9 +868,7 @@ function moonSceneSvg(illumination, waxing) {
       ${starsHtml}
       ${moonGraphic(moonCx, moonCy, moonR, illumination, waxing)}
     </g>
-    <circle cx="${cx - 66}" cy="200" r="76" fill="var(--card)"/>
-    <circle cx="${cx + 2}" cy="208" r="82" fill="var(--card)"/>
-    <circle cx="${cx + 72}" cy="196" r="74" fill="var(--card)"/>
+    ${hills}
   </svg>`;
 }
 
