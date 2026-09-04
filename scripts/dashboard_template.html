@@ -196,7 +196,7 @@
   .moon-modal .phase-name { font-family: "IBM Plex Serif", Georgia, serif; font-style: italic; font-weight: 600; font-size: 21px; }
   .moon-modal .phase-sub { font-size: 12.5px; color: var(--ink-muted); margin-top: 3px; }
   .moon-illustration-wrap { display: flex; justify-content: center; margin: 18px 0 20px; }
-  .moon-illustration-wrap svg { border-radius: 50%; }
+  .moon-illustration-wrap svg { max-width: 280px; }
   .moon-stats { display: flex; border-top: 1px solid var(--gridline); padding-top: 14px; }
   .moon-stats .stat { flex: 1; }
   .moon-stats .stat + .stat { border-left: 1px solid var(--gridline); }
@@ -804,33 +804,60 @@ function moonPhaseInfo(date) {
 // Two arcs of equal outer radius: a fixed hemisphere (the near side) plus a
 // terminator arc whose radius/sweep encode illumination — degenerates to a
 // straight line at quarter moons and to a full circle at new/full moon.
-function moonDiscSvg(size, illumination, waxing, withStars) {
-  const r = size / 2 - 1;
-  const cx = size / 2, cy = size / 2;
+// Returns the path for the *lit* region of a moon centered at (cx, cy).
+function moonLitPath(cx, cy, r, illumination, waxing) {
   const a = r * (1 - 2 * illumination);
   const sweep1 = waxing ? 1 : 0;
   const sweep2 = a >= 0 ? sweep1 : (sweep1 === 1 ? 0 : 1);
-  const path = `M ${cx} ${cy - r} A ${r} ${r} 0 0 ${sweep1} ${cx} ${cy + r} A ${Math.abs(a)} ${r} 0 0 ${sweep2} ${cx} ${cy - r} Z`;
-  const starsHtml = withStars ? Array.from({ length: 7 }).map((_, i) => {
-    const sx = 8 + (i * 41) % (size - 16);
-    const sy = 6 + (i * 29) % Math.round(size * 0.4);
-    const sr = 1 + (i % 3) * 0.6;
-    return `<circle cx="${sx}" cy="${sy}" r="${sr}" fill="#ffffff" opacity="${0.45 + (i % 3) * 0.18}"/>`;
-  }).join("") : "";
+  return `M ${cx} ${cy - r} A ${r} ${r} 0 0 ${sweep1} ${cx} ${cy + r} A ${Math.abs(a)} ${r} 0 0 ${sweep2} ${cx} ${cy - r} Z`;
+}
+
+const MOON_SKY = "#1c3a5e";
+const MOON_LIGHT = "#efece3";
+
+// Small dome badge for the header button: sky arch + moon, no stars/hills (too fine at this size).
+function moonIconSvg(size, illumination, waxing) {
+  const cx = size / 2, R = size / 2 - 1, B = size - 1.5;
+  const domePath = `M ${cx - R} ${B} A ${R} ${R} 0 0 1 ${cx + R} ${B} Z`;
+  const moonR = R * 0.52, moonCx = cx + R * 0.1, moonCy = B - R * 0.62;
   return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="#16294a"/>
-    ${starsHtml}
-    <path d="${path}" fill="#ece9e1"/>
+    <path d="${domePath}" fill="${MOON_SKY}"/>
+    <path d="${moonLitPath(moonCx, moonCy, moonR, illumination, waxing)}" fill="${MOON_LIGHT}"/>
+  </svg>`;
+}
+
+// Full scene for the popover: sky-arch "aperture" with stars, the moon, and a
+// scalloped hill silhouette masking the bottom edge — modelled on how a real
+// moonphase complication's window looks, not a literal copy of any one watch.
+function moonSceneSvg(illumination, waxing) {
+  const W = 300, H = 190, cx = 150, R = 118, B = 150;
+  const domePath = `M ${cx - R} ${B} A ${R} ${R} 0 0 1 ${cx + R} ${B} Z`;
+  const moonR = 44, moonCx = 188, moonCy = 96;
+  const clipId = "moonDomeClip";
+  const bigStars = [[74, 58], [206, 50], [116, 100]];
+  const dots = [[52, 78], [96, 52], [142, 66], [172, 44], [222, 76], [238, 100], [64, 108], [200, 108]];
+  const starsHtml = bigStars.map(([x, y]) => `<text x="${x}" y="${y}" font-size="13" text-anchor="middle" fill="#ffffff">✦</text>`).join("")
+    + dots.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${1 + (i % 3) * 0.5}" fill="#ffffff" opacity="${0.5 + (i % 3) * 0.15}"/>`).join("");
+  return `<svg width="100%" viewBox="0 0 ${W} ${H}">
+    <defs><clipPath id="${clipId}"><path d="${domePath}"/></clipPath></defs>
+    <path d="${domePath}" fill="${MOON_SKY}"/>
+    <g clip-path="url(#${clipId})">
+      ${starsHtml}
+      <path d="${moonLitPath(moonCx, moonCy, moonR, illumination, waxing)}" fill="${MOON_LIGHT}"/>
+    </g>
+    <circle cx="${cx - 62}" cy="228" r="90" fill="var(--card)"/>
+    <circle cx="${cx + 4}" cy="238" r="98" fill="var(--card)"/>
+    <circle cx="${cx + 70}" cy="222" r="86" fill="var(--card)"/>
   </svg>`;
 }
 
 function updateMoonWidgets() {
   const now = new Date();
   const info = moonPhaseInfo(now);
-  document.getElementById("moonBtn").innerHTML = moonDiscSvg(34, info.illumination, info.waxing, false);
+  document.getElementById("moonBtn").innerHTML = moonIconSvg(34, info.illumination, info.waxing);
   document.getElementById("moonPhaseName").textContent = info.phaseName;
   document.getElementById("moonPhaseSub").textContent = Math.round(info.illumination * 100) + "% beleuchtet";
-  document.getElementById("moonIllustrationWrap").innerHTML = moonDiscSvg(180, info.illumination, info.waxing, true);
+  document.getElementById("moonIllustrationWrap").innerHTML = moonSceneSvg(info.illumination, info.waxing);
   document.getElementById("moonAge").textContent = info.age.toFixed(1).replace(".", ",");
   document.getElementById("moonTime").textContent = now.toISOString().slice(11, 16);
 }
