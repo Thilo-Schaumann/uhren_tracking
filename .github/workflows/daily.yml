@@ -9,32 +9,17 @@ jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
-      # Temporary pause requested by the user on 2026-09-04, to resume 2026-09-10.
-      # Remove this step (and the `if:` on the ones below) once past that date.
-      - id: gate
-        run: |
-          if [ "$(date -u +%Y-%m-%d)" \< "2026-09-10" ]; then
-            echo "run=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - uses: actions/checkout@v4
-        if: steps.gate.outputs.run == 'true'
 
       - uses: actions/setup-python@v5
-        if: steps.gate.outputs.run == 'true'
         with:
           python-version: "3.12"
 
       - run: pip install -r requirements.txt
-        if: steps.gate.outputs.run == 'true'
 
       - run: python run.py
-        if: steps.gate.outputs.run == 'true'
 
       - name: Commit updated database
-        if: steps.gate.outputs.run == 'true'
         run: |
           git config user.name "watch-tracker-bot"
           git config user.email "actions@users.noreply.github.com"
