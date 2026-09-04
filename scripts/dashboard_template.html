@@ -145,7 +145,8 @@
   .breadcrumb .brand-title img { height: 24px; }
 
   .model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-  .model-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: left; }
+  .model-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: left; cursor: pointer; }
+  .model-card:hover { border-color: var(--accent); }
   .model-card img, .model-card .placeholder { width: 100%; aspect-ratio: 1; border-radius: 7px; object-fit: cover; background: var(--plane); border: none; }
   .model-card button.photo-btn { padding: 0; border: none; background: none; width: 100%; display: block; }
   .model-card .placeholder { display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--ink-muted); }
@@ -565,17 +566,20 @@ function renderBrandDetail(root, brand) {
     card.className = "model-card";
     const isModelFav = favorites.some(f => f.type === "model" && f.brand === m.brand && f.model_line === m.model_line && !f.reference_number);
     card.innerHTML = `
-      <button class="photo-btn" data-open="${m.brand}|||${m.model_line}">
+      <div class="photo-wrap">
         ${m.image_url ? `<img src="${m.image_url}" alt="">` : `<div class="placeholder">⌚</div>`}
-      </button>
+      </div>
       <div class="star-row"><button class="star-btn ${isModelFav ? "on" : ""}" data-model-star="${m.brand}|||${m.model_line}">★</button></div>
       <div class="name">${m.model_line}</div>
       <div class="count num">${m.count} aktiv</div>
     `;
+    card.addEventListener("click", () => toggleDrilldown(m.brand, m.model_line, card));
+    card.querySelector("[data-model-star]").addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleModelFavorite(m.brand, m.model_line, null);
+    });
     grid.appendChild(card);
   });
-  grid.querySelectorAll("[data-model-star]").forEach(btn => btn.addEventListener("click", () => { const [br, ml] = btn.dataset.modelStar.split("|||"); toggleModelFavorite(br, ml, null); }));
-  grid.querySelectorAll("[data-open]").forEach(btn => btn.addEventListener("click", () => { const [br, ml] = btn.dataset.open.split("|||"); toggleDrilldown(br, ml, btn.closest(".model-card")); }));
 }
 
 function toggleDrilldown(brand, modelLine, cardEl) {
