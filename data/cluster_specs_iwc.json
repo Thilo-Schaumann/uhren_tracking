@@ -134,5 +134,105 @@
     "case_material": "Gelbgold",
     "bracelet_type": "Lederband",
     "size_mm": 39
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "2050",
+    "bracelet_type": "Lederband",
+    "size_mm": 36
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "250",
+    "case_material": "Roségold",
+    "bracelet_type": "Lederband",
+    "size_mm": 43
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "30110",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 44
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "30120",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "3545",
+    "bracelet_type": "Lederband",
+    "size_mm": 33
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "3750",
+    "bracelet_type": "Lederband",
+    "size_mm": 39
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "3756",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 43
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "389401",
+    "case_material": "Keramik",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 42
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "5023",
+    "bracelet_type": "Lederband",
+    "size_mm": 44
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "5441",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 42
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "69380",
+    "case_material": "Keramik",
+    "bracelet_type": "Lederband",
+    "size_mm": 41
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "79350",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 40.9
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "866",
+    "case_material": "Edelstahl",
+    "size_mm": 37
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "IW371928",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "IWC",
+    "reference_number": "IW500917",
+    "case_material": "Roségold",
+    "bracelet_type": "Lederband",
+    "size_mm": 46
   }
 ]
