@@ -1,0 +1,22 @@
+[
+  {"brand": "Rolex", "reference_number": "116610LN", "dial_color": "Schwarz", "bezel_color": "Schwarz", "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "116610LV", "dial_color": "Grün", "bezel_color": "Grün", "color_source": "text", "nickname": "Hulk"},
+  {"brand": "Rolex", "reference_number": "116613LN", "dial_color": "Schwarz", "bezel_color": "Schwarz", "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "116618LB", "dial_color": "Blau", "bezel_color": "Blau", "color_source": "text", "nickname": "Bluesy"},
+  {"brand": "Rolex", "reference_number": "126610LN", "dial_color": "Schwarz", "bezel_color": "Schwarz", "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "126610LV", "dial_color": "Schwarz", "bezel_color": "Grün", "color_source": "text", "nickname": "Kermit"},
+  {"brand": "Rolex", "reference_number": "14060M", "dial_color": "Schwarz", "bezel_color": "Schwarz", "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "16800", "dial_color": "Schwarz", "bezel_color": "Schwarz", "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "1680", "dial_color": "Schwarz", "bezel_color": "Schwarz", "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "16613", "dial_color": null, "bezel_color": "Schwarz", "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "16613LN", "dial_color": null, "bezel_color": "Schwarz", "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "16700", "dial_color": "Schwarz", "bezel_color": null, "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "116710BLNR", "dial_color": "Schwarz", "bezel_color": "Blau/Schwarz", "color_source": "text", "nickname": "Batman"},
+  {"brand": "Rolex", "reference_number": "116710LN", "dial_color": "Schwarz", "bezel_color": "Schwarz", "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "116718LN", "dial_color": null, "bezel_color": "Schwarz", "color_source": "text", "nickname": null},
+  {"brand": "Rolex", "reference_number": "116719BLRO", "dial_color": "Blau", "bezel_color": "Blau/Rot", "color_source": "text", "nickname": "Pepsi"},
+  {"brand": "Rolex", "reference_number": "126719BLRO", "dial_color": "Blau", "bezel_color": "Blau/Rot", "color_source": "text", "nickname": "Pepsi"},
+  {"brand": "Rolex", "reference_number": "126710BLNR", "dial_color": "Schwarz", "bezel_color": "Blau/Schwarz", "color_source": "text", "nickname": "Batman"},
+  {"brand": "Rolex", "reference_number": "126710GRNR", "dial_color": "Schwarz", "bezel_color": "Grün/Schwarz", "color_source": "text", "nickname": "Sprite"},
+  {"brand": "Rolex", "reference_number": "126715CHNR", "dial_color": "Schwarz", "bezel_color": "Braun/Schwarz", "color_source": "text", "nickname": "Root Beer"}
+]

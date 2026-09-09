@@ -257,6 +257,8 @@
           <th data-key="bezel_material">Lünette</th>
           <th data-key="band_material">Band</th>
           <th data-key="dial_color">Zifferblatt</th>
+          <th data-key="bezel_color">Lünettenfarbe</th>
+          <th data-key="color_source" title="Quelle der Farb-Angabe: Text-Recherche oder Bilderkennung">Quelle</th>
           <th data-key="complication">Komplikation</th>
           <th data-key="has_papers">Papiere</th>
           <th data-key="has_box">Box</th>
@@ -312,6 +314,7 @@ const CATEGORY_FILTERS = [
   { key: "bezel_material", label: "Lünette" },
   { key: "bracelet_type", label: "Armband" },
   { key: "dial_color", label: "Zifferblatt" },
+  { key: "bezel_color", label: "Lünettenfarbe" },
   { key: "condition", label: "Zustand" },
   { key: "complication", label: "Komplikation" },
 ];
@@ -951,6 +954,8 @@ function renderTable() {
       <td>${r.bezel_material || "–"}</td>
       <td>${r.band_material || "–"}</td>
       <td>${r.dial_color || "–"}</td>
+      <td>${r.bezel_color || "–"}</td>
+      <td>${r.color_source === "image" ? "📷 Bild" : r.color_source === "text" ? "📝 Text" : "–"}</td>
       <td>${r.complication || "–"}</td>
       <td>${r.has_papers == null ? "–" : (r.has_papers ? "✓" : "✗")}</td>
       <td>${r.has_box == null ? "–" : (r.has_box ? "✓" : "✗")}</td>
