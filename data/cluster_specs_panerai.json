@@ -139,5 +139,41 @@
     "reference_number": "PAM00306",
     "case_material": "Titan",
     "size_mm": 47
+  },
+  {
+    "brand": "Panerai",
+    "reference_number": "200",
+    "case_material": "Titan",
+    "bracelet_type": "Lederband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Panerai",
+    "reference_number": "3000",
+    "case_material": "Composite (keramisiertes Aluminium)",
+    "bracelet_type": "Lederband",
+    "size_mm": 47
+  },
+  {
+    "brand": "Panerai",
+    "reference_number": "6000",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 45
+  },
+  {
+    "brand": "Panerai",
+    "reference_number": "9010",
+    "case_material": "Titan",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 47
+  },
+  {
+    "brand": "Panerai",
+    "reference_number": "950ER",
+    "case_material": "Platin",
+    "bracelet_type": "Lederband",
+    "size_mm": 47
   }
 ]
