@@ -184,9 +184,17 @@ gilt das hier, nicht eine Vermutung:
   jetzt erledigt (siehe Erledigt-Sektion). Noch offen: AP Royal Oak, Patek
   Nautilus, Omega Speedmaster (Panda-Zifferblätter), Tudor Black Bay
   (Lünettenfarben) — reine Text-Recherche, kein Bild-/Nutzer-Check vorgesehen
-- **Cluster-Abdeckung ausbauen**: aktuell 59% der aktiven Angebote einem
-  konkreten Cluster zugeordnet, Rest fällt auf die grobe Modelllinie zurück
-  (erwartbar durch 80/20-Scope, kein Fehler — aber ausbaufähig)
+- **Cluster-Abdeckung ausbauen**: aktuell 71% der aktiven Angebote einem
+  konkreten Cluster zugeordnet (Stand 2026-09-09, vorher 59%), Rest fällt auf
+  die grobe Modelllinie zurück (erwartbar durch 80/20-Scope, kein Fehler —
+  aber ausbaufähig). Bisher in diesem Anlauf erledigt: Omega (56/57, 98%),
+  IWC (35/35, 100%), Breitling (51/53, 96%) — je 1 Agent pro Marke,
+  sequenziell, ohne Unteragenten. Nächste Marken nach Größe der Lücke:
+  Cartier (13 fehlende Referenzen), Panerai (6), Rolex (Rest, 16), Audemars
+  Piguet (8), Jaeger-LeCoultre (4), Chopard (1), Tudor (3), Patek Philippe
+  (4), A. Lange & Söhne (3), Glashütte Original (1), Girard Perregaux (2),
+  TAG Heuer (1), Sinn (1), Vacheron Constantin (2, neu mit aufgenommen).
+  Nutzer möchte nach je 2-3 Marken eine Pause zum Zwischenstand einlegen
 - **Heuer Montreal 110.501/110.503**: Stahl-/PVD-Zuordnung in den Quellen
   uneinheitlich — model_line ist jetzt sauber ("Montreal"), aber die
   Material-Frage selbst noch nicht recherchiert
