@@ -34,7 +34,8 @@ def scrape_shopify_store(base_url: str, seller: str, shop_display_name: str, exc
             title = product.get("title", "")
             brand = resolve_brand(product.get("vendor"), shop_display_name, title)
             description = _TAG_STRIP.sub(" ", product.get("body_html", ""))
-            specs = extract_specs(f"{title} {description}")
+            full_text = f"{title} {description}"
+            specs = extract_specs(full_text)
             images = product.get("images") or []
 
             items.append({
@@ -44,7 +45,7 @@ def scrape_shopify_store(base_url: str, seller: str, shop_display_name: str, exc
                 "brand": brand,
                 "model": title,
                 "model_line": extract_model_line(brand, title),
-                "reference_number": extract_reference_number(title),
+                "reference_number": extract_reference_number(full_text),
                 "url": f"{base_url}/products/{product['handle']}",
                 "price": float(variant["price"]) if variant.get("price") else None,
                 "currency": "EUR",

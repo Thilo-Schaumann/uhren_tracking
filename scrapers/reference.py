@@ -1,7 +1,7 @@
 """Best-effort reference-number extraction from a free-text watch title."""
 import re
 
-_CANDIDATE = re.compile(r"\b\d{3,6}[A-Z]{0,3}(?:[.\-]\d{1,4})?\b")
+_CANDIDATE = re.compile(r"\b\d{3,15}[A-Z]{0,3}(?:[.\-]\d{1,4}){0,5}\b")
 _YEAR = re.compile(r"^(19|20)\d{2}$")
 
 
