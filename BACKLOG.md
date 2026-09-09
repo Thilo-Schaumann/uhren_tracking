@@ -7,6 +7,19 @@ neue Wünsche werden unter "Offen" ergänzt, erledigte Punkte wandern nach
 
 ## Erledigt
 
+**Täglicher Dashboard-Auto-Refresh (2026-09-09)**
+- Geprüft: GitHub Pages hätte eine neue, öffentliche URL bedeutet und die
+  geräteübergreifenden Favoriten kaputt gemacht (die laufen über eine
+  Artifact-spezifische Datenbank-Funktion, die es auf einer normalen Website
+  nicht gibt) — daher verworfen
+- Stattdessen: geplanter Cloud-Agent ("Uhren-Tracker daily dashboard
+  refresh", `trig_01MZEsGP379m1VnvvWeHVQs5`), läuft täglich 04:00 UTC (1h
+  nach dem GitHub-Scrape), holt den aktuellen Stand aus GitHub, baut
+  `export_dashboard_data.py` + `build_dashboard.py` neu und republished auf
+  dieselbe bestehende Artifact-URL — kein Git-Commit, kein neues Scraping,
+  reines Rebuild+Republish. Testlauf erfolgreich (51s, keine Fehler)
+- Verwaltung: https://claude.ai/code/routines/trig_01MZEsGP379m1VnvvWeHVQs5
+
 **Rolex Zifferblatt-/Lünettenfarben-Pilot (2026-09-09)**
 - Ursprünglich als Bilderkennungs-Pilot geplant — stattdessen entschieden
   (Nutzerwunsch): keine automatische Bilderkennung, sondern Claude zeigt die
@@ -130,6 +143,10 @@ Details je Marke)
 Diese Punkte wurden explizit besprochen und festgelegt — bei Unsicherheit
 gilt das hier, nicht eine Vermutung:
 
+- **Dashboard bleibt ein Claude Artifact, kein Umzug zu GitHub Pages**: der
+  Nutzer will die Seite geschützt (nicht öffentlich) UND geräteübergreifende
+  Favoriten — beides bringt der Artifact schon mit, GitHub Pages hätte beides
+  gekostet. Auto-Refresh läuft stattdessen über einen geplanten Cloud-Agenten
 - **"Bilderkennung" für Zifferblatt-/Lünettenfarbe bedeutet keine automatische
   KI-Bildanalyse** (Korrektur einer früheren Annahme) — Claude schickt die
   Fotos der offenen Fälle an den Nutzer, der Nutzer bestimmt die Farbe visuell
@@ -167,10 +184,6 @@ gilt das hier, nicht eine Vermutung:
   jetzt erledigt (siehe Erledigt-Sektion). Noch offen: AP Royal Oak, Patek
   Nautilus, Omega Speedmaster (Panda-Zifferblätter), Tudor Black Bay
   (Lünettenfarben) — reine Text-Recherche, kein Bild-/Nutzer-Check vorgesehen
-- **Täglicher Dashboard-Auto-Refresh**: einmal besprochen, aber nie
-  eingerichtet. Aktuell aktualisiert sich das Dashboard nur, wenn Claude es
-  manuell neu baut und veröffentlicht — der tägliche GitHub-Scrape läuft
-  automatisch, aber niemand zieht das automatisch ins Dashboard.
 - **Cluster-Abdeckung ausbauen**: aktuell 59% der aktiven Angebote einem
   konkreten Cluster zugeordnet, Rest fällt auf die grobe Modelllinie zurück
   (erwartbar durch 80/20-Scope, kein Fehler — aber ausbaufähig)
