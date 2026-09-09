@@ -274,5 +274,80 @@
     "reference_number": "RB0510U5/BC39",
     "case_material": "Roségold",
     "size_mm": 46
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "200",
+    "case_material": "Edelstahl",
+    "bezel_material": "Aluminium",
+    "size_mm": 46
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "2824-2",
+    "case_material": "Edelstahl",
+    "size_mm": 42
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "500",
+    "case_material": "Edelstahl",
+    "size_mm": 42
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "7750",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 43.7
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "800",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "size_mm": 44
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "A10380101L1A1",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband (Rouleaux)",
+    "size_mm": 36
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "A17327211G1A1",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 36
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "A233803A1B1X1",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "A413222",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "M13370",
+    "case_material": "Edelstahl (schwarz PVD/DLC, \"Blacksteel\")",
+    "bracelet_type": "Kautschukband (schwarz)",
+    "size_mm": 48
+  },
+  {
+    "brand": "Breitling",
+    "reference_number": "PB0134101C1S2",
+    "case_material": "Edelstahl/Platin",
+    "bracelet_type": "Kautschukband (schwarz)",
+    "size_mm": 42
   }
 ]
