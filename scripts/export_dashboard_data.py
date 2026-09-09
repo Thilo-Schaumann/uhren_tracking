@@ -43,6 +43,21 @@ def _load_cluster_specs() -> dict:
     return specs
 
 
+def _load_color_variants() -> dict:
+    """Merges every data/color_variants_*.json (researched dial/bezel color per
+    reference, from the Rolex image-recognition pilot) into a single
+    {(brand, normalized_ref): {dial_color, bezel_color, color_source, nickname}}
+    lookup. A non-null value here overrides the scraper's raw per-listing text
+    extraction, which is noisier (e.g. it can pick up an unrelated color
+    mention like lume or gold-index color instead of the actual dial)."""
+    variants = {}
+    for path in DATA_DIR.glob("color_variants_*.json"):
+        for entry in json.loads(path.read_text()):
+            key = (entry["brand"], _normalize_ref(entry["reference_number"]))
+            variants[key] = entry
+    return variants
+
+
 def _cluster_label(model_line: str, spec: dict | None) -> str:
     """A model line (e.g. "GMT-Master II") isn't a valid comparison unit on its
     own — steel/ceramic/Oyster and white-gold/Jubilee variants of the "same"
@@ -92,6 +107,7 @@ def build():
     conn = connect()
     thumbnails = json.loads(THUMBNAIL_CACHE.read_text()) if THUMBNAIL_CACHE.exists() else {}
     cluster_specs = _load_cluster_specs()
+    color_variants = _load_color_variants()
     nicknames = defaultdict(list)
     if MODEL_VARIANTS.exists():
         for v in json.loads(MODEL_VARIANTS.read_text()):
@@ -107,6 +123,9 @@ def build():
 
     def spec_of(brand: str, ref: str) -> dict:
         return cluster_specs.get((brand, _normalize_ref(ref)), {}) if ref else {}
+
+    def color_of(brand: str, ref: str) -> dict:
+        return color_variants.get((brand, _normalize_ref(ref)), {}) if ref else {}
 
     def cluster_of(brand: str, model_line: str, ref: str) -> str:
         return _cluster_label(model_line, spec_of(brand, ref))
@@ -146,17 +165,20 @@ def build():
         cluster = cluster_of(brand, model_line, ref)
         family_of_cluster[(brand, cluster)] = model_line
         spec = spec_of(brand, ref)
+        color = color_of(brand, ref)
         grouped[(brand, cluster)].append({
             "reference_number": ref, "price": price, "currency": currency,
             "platform": platform, "condition": condition, "year": year,
-            "band_material": band, "dial_color": dial,
+            "band_material": band, "dial_color": color.get("dial_color") or dial,
+            "bezel_color": color.get("bezel_color"),
+            "color_source": color.get("color_source") if (color.get("dial_color") or color.get("bezel_color")) else None,
             "has_papers": has_papers, "has_box": has_box,
             "complication": complication,
             "case_material": spec.get("case_material"),
             "bezel_material": spec.get("bezel_material"),
             "bracelet_type": spec.get("bracelet_type"),
             "image_url": thumbnails.get(image, image), "url": url,
-            "nickname": nicknames.get((brand, ref)),
+            "nickname": nicknames.get((brand, ref)) or color.get("nickname"),
             "price_bucket": _price_bucket(price),
         })
 
@@ -194,6 +216,8 @@ def build():
             "bezel_material": _representative("bezel_material"),
             "bracelet_type": _representative("bracelet_type"),
             "dial_color": _representative("dial_color"),
+            "bezel_color": _representative("bezel_color"),
+            "color_source": _representative("color_source"),
             "condition": _representative("condition"),
             "complication": _representative("complication"),
             "has_papers": _representative_known("has_papers"),
@@ -245,6 +269,7 @@ def build():
             "currency": item["currency"], "platform": item["platform"],
             "condition": item["condition"], "year": item["year"],
             "band_material": item["band_material"], "dial_color": item["dial_color"],
+            "bezel_color": item["bezel_color"], "color_source": item["color_source"],
             "case_material": item["case_material"],
             "bezel_material": item["bezel_material"], "bracelet_type": item["bracelet_type"],
             "complication": item["complication"], "price_bucket": item["price_bucket"],
