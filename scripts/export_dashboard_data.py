@@ -58,6 +58,19 @@ def _load_color_variants() -> dict:
     return variants
 
 
+def _load_color_overrides_listings() -> dict:
+    """Per-listing dial/bezel color, keyed by (platform, external_id) — for
+    references where the color genuinely varies watch-to-watch, so a
+    reference-level lookup can't apply. Populated by the user looking at the
+    actual listing photo (see color_source: "user" in the output) rather than
+    automated image recognition. Takes priority over both the reference-level
+    color_variants lookup and the raw scraped text."""
+    path = DATA_DIR / "color_overrides_listings.json"
+    if not path.exists():
+        return {}
+    return {(e["platform"], e["external_id"]): e for e in json.loads(path.read_text())}
+
+
 def _cluster_label(model_line: str, spec: dict | None) -> str:
     """A model line (e.g. "GMT-Master II") isn't a valid comparison unit on its
     own — steel/ceramic/Oyster and white-gold/Jubilee variants of the "same"
@@ -108,6 +121,7 @@ def build():
     thumbnails = json.loads(THUMBNAIL_CACHE.read_text()) if THUMBNAIL_CACHE.exists() else {}
     cluster_specs = _load_cluster_specs()
     color_variants = _load_color_variants()
+    color_overrides_listings = _load_color_overrides_listings()
     nicknames = defaultdict(list)
     if MODEL_VARIANTS.exists():
         for v in json.loads(MODEL_VARIANTS.read_text()):
@@ -133,7 +147,7 @@ def build():
     active = conn.execute("""
         SELECT l.brand, l.model_line, l.reference_number, p.price, p.currency, l.platform,
                l.condition, l.year, l.band_material, l.dial_color, l.has_papers, l.has_box,
-               l.complication, l.image_url, l.url
+               l.complication, l.image_url, l.url, l.external_id
         FROM listings l
         JOIN price_snapshots p ON p.listing_id = l.id AND p.date = l.last_seen
         WHERE l.status = 'active' AND l.brand IS NOT NULL AND l.model_line IS NOT NULL
@@ -161,24 +175,35 @@ def build():
     family_of_cluster = {}
     for row in active:
         (brand, model_line, ref, price, currency, platform, condition, year,
-         band, dial, has_papers, has_box, complication, image, url) = row
+         band, dial, has_papers, has_box, complication, image, url, external_id) = row
         cluster = cluster_of(brand, model_line, ref)
         family_of_cluster[(brand, cluster)] = model_line
         spec = spec_of(brand, ref)
         color = color_of(brand, ref)
+        listing_color = color_overrides_listings.get((platform, external_id), {})
+        final_dial = listing_color.get("dial_color") or color.get("dial_color") or dial
+        final_bezel = listing_color.get("bezel_color") or color.get("bezel_color")
+        final_source = (listing_color.get("color_source") if listing_color.get("dial_color") or listing_color.get("bezel_color")
+                         else color.get("color_source") if (color.get("dial_color") or color.get("bezel_color")) else None)
+        # An explicit null nickname in a listing override means "confirmed no
+        # special nickname for this exact watch" — don't fall through to a
+        # reference-level nickname that might not apply to this specific unit
+        # (e.g. ref 16710 exists in plain/Coke/Pepsi bezel variants).
+        final_nickname = (listing_color["nickname"] if "nickname" in listing_color
+                           else nicknames.get((brand, ref)) or color.get("nickname"))
         grouped[(brand, cluster)].append({
             "reference_number": ref, "price": price, "currency": currency,
             "platform": platform, "condition": condition, "year": year,
-            "band_material": band, "dial_color": color.get("dial_color") or dial,
-            "bezel_color": color.get("bezel_color"),
-            "color_source": color.get("color_source") if (color.get("dial_color") or color.get("bezel_color")) else None,
+            "band_material": band, "dial_color": final_dial,
+            "bezel_color": final_bezel,
+            "color_source": final_source,
             "has_papers": has_papers, "has_box": has_box,
             "complication": complication,
             "case_material": spec.get("case_material"),
             "bezel_material": spec.get("bezel_material"),
             "bracelet_type": spec.get("bracelet_type"),
             "image_url": thumbnails.get(image, image), "url": url,
-            "nickname": nicknames.get((brand, ref)) or color.get("nickname"),
+            "nickname": final_nickname,
             "price_bucket": _price_bucket(price),
         })
 
