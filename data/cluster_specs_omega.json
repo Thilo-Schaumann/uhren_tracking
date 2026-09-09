@@ -241,5 +241,191 @@
     "case_material": "Edelstahl",
     "bezel_material": "Aluminium",
     "size_mm": 39.7
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "145.022",
+    "case_material": "Edelstahl",
+    "bezel_material": "Aluminium",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "145.029",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 40
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "210.22.42.20.01.002",
+    "case_material": "Edelstahl/Roségold",
+    "bezel_material": "Roségold/Keramik",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "210.30.42.20.01.002",
+    "case_material": "Edelstahl",
+    "bezel_material": "Titan",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "210.30.42.20.04.001",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "210.30.44.51.01.001",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 44
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "210.32.42.20.06.002",
+    "case_material": "Edelstahl",
+    "bezel_material": "Titan",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "21030422004001",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "23110422101002",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 41.5
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "232.30.46.51.01.001",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 45.5
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "2598.80.00",
+    "case_material": "Edelstahl",
+    "bezel_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 41.5
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "28023037",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Lederband",
+    "size_mm": 42.2
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "310.32.42.50.02.001",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Textilband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "311.30.40.30.01.001",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 39.7
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "311.30.42.30.01.003",
+    "case_material": "Edelstahl",
+    "bezel_material": "Aluminium",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "311.32.40.30.01.001",
+    "case_material": "Edelstahl",
+    "bezel_material": "Aluminium",
+    "bracelet_type": "Lederband",
+    "size_mm": 39.7
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "311.63.42.30.03.001",
+    "case_material": "Gelbgold",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Lederband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "321.10.42.50.04.001",
+    "case_material": "Edelstahl",
+    "bezel_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "324.30.38.50.01.001",
+    "case_material": "Edelstahl",
+    "bezel_material": "Aluminium",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 38
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "332.10.41.51.01.002",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 40.85
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "35063100",
+    "case_material": "Edelstahl",
+    "bezel_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "35925000",
+    "case_material": "Edelstahl",
+    "bezel_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "522.10.42.21.03.001",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 41.5
+  },
+  {
+    "brand": "Omega",
+    "reference_number": "522.30.41.20.01.001",
+    "case_material": "Edelstahl",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 41
   }
 ]
