@@ -1,0 +1,27 @@
+[
+  {
+    "platform": "grimmeissen", "external_id": "1014935",
+    "action": "override", "field": "model_line", "value": "Submariner",
+    "reason": "Vendor lists as 'Explorer II', but own description says 'Explorer II Orange von Bamford' — a Bamford-customized Rolex Submariner. Reference 116610 is a genuine Submariner reference, not Explorer II."
+  },
+  {
+    "platform": "grimmeissen", "external_id": "1015578",
+    "action": "override", "field": "model_line", "value": "Clé",
+    "reason": "Vendor lists as 'Ballon Bleu', but reference 3803 is a documented Cartier Clé reference (pink/rose gold, ~32mm, diamond bezel) — confirmed against a matching reference-3803 Clé listing elsewhere."
+  },
+  {
+    "platform": "cologne_watch", "external_id": "8918472130883",
+    "action": "override", "field": "reference_number", "value": null,
+    "reason": "'1845' extracted from the product title is Glashütte Original's founding year (part of the marketing name), not a technical reference — no real reference number appears anywhere in the listing text."
+  },
+  {
+    "platform": "grimmeissen", "external_id": "1009452",
+    "action": "exclude",
+    "reason": "Spare part, not a complete watch: 'Zifferblatt für Herren Daydate Gelbgold. Passend für Ref. 18038 oder 18238' — a replacement dial only."
+  },
+  {
+    "platform": "grimmeissen", "external_id": "1015932",
+    "action": "exclude",
+    "reason": "Spare part, not a complete watch: 'Oysterband Stahl Gold für Ref. 16613' — a replacement bracelet only."
+  }
+]

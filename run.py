@@ -3,6 +3,7 @@ import sys
 
 from db import connect, mark_missing_as_sold, today_str, upsert_listing
 from scrapers import cologne_watch, grimmeissen, rothfuss
+from scrapers.overrides import apply_overrides
 
 SCRAPERS = {
     "grimmeissen": grimmeissen.scrape,
@@ -22,6 +23,7 @@ def main():
             print(f"[{platform}] scrape failed: {exc}", file=sys.stderr)
             continue
 
+        items = apply_overrides(items)
         seen_ids = {item["external_id"] for item in items}
         for item in items:
             upsert_listing(conn, item, today)

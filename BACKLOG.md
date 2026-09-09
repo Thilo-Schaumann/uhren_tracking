@@ -7,6 +7,32 @@ neue Wünsche werden unter "Offen" ergänzt, erledigte Punkte wandern nach
 
 ## Erledigt
 
+**Datenqualitäts-Fixes (2026-09-09)**
+- Referenz-Extraktion war bei 7+-stelligen Nummern komplett blind (Regex kappte
+  bei 6 Ziffern) und Shopify-Scraper (Rothfuss/Cologne Watch) durchsuchten nur
+  den Titel, nicht die Beschreibung — behoben in `scrapers/reference.py` +
+  `scrapers/shopify.py`. Fixt u.a. 6 Omega-Angebote, bei denen statt der
+  echten Referenz ein Kaliber-/Kollektionsname (321, 300M, 300) gespeichert war
+- `scrapers/model_line.py`: "Clé" zu Cartier ergänzt, neue Einträge für
+  "Heuer" (Montreal, Monaco, Autavia, Camaro) und "Glashütte Original"
+  (Senator Karrée/Excellence, Pano-Familie) — vorher fiel model_line dort auf
+  den rohen, oft langen Scraper-Titel zurück
+- Neuer Mechanismus `scrapers/overrides.py` + `data/manual_overrides.json`
+  für Fälle, die keine Regel lösen kann (Vendor-Fehletikettierung, Ersatzteile
+  statt komplette Uhren) — wird in `run.py` auf jeden Scrape angewendet, bleibt
+  also auch nach künftigen Läufen bestehen. Aktuell 5 Einträge:
+  - Rolex "Explorer II" 116610 → korrigiert zu Submariner (Vendor-Beschreibung:
+    "Explorer II Orange von Bamford" — ein Bamford-Umbau, 116610 ist eine
+    echte Submariner-Referenz)
+  - Cartier "Ballon Bleu" 3803 → korrigiert zu Clé (Referenz 3803 ist
+    dokumentiert als Cartier Clé, Roségold, Brillant-Lünette, ~32mm)
+  - Glashütte Original "1845" → Referenznummer auf null gesetzt (ist das
+    Gründungsjahr in der Modellbezeichnung, keine echte Referenz — kein
+    echter Code irgendwo im Text auffindbar, daher Lücke statt Rateversuch)
+  - 2x Rolex-Ersatzteile ausgeschlossen ("Zifferblatt Sternenhimmel" =
+    Daydate-Ersatzzifferblatt, "Oysterband" = Ersatzarmband für Ref. 16613) —
+    waren keine kompletten Uhren, sondern einzelne Ersatzteile
+
 **Kern-Infrastruktur**
 - 3 Scraper: Grimmeissen (crawlt alle 51 Marken-Seiten — `/de/uhren` zeigt nur
   die ~35 neuesten, nicht den vollen Katalog), Rothfuss + Cologne Watch
@@ -121,18 +147,12 @@ gilt das hier, nicht eine Vermutung:
 - **Cluster-Abdeckung ausbauen**: aktuell 59% der aktiven Angebote einem
   konkreten Cluster zugeordnet, Rest fällt auf die grobe Modelllinie zurück
   (erwartbar durch 80/20-Scope, kein Fehler — aber ausbaufähig)
-- **Bekannte Datenqualitäts-Funde, noch nicht behoben**:
-  - Rolex "Explorer II 116610" ist tatsächlich eine Submariner (Vendor-Fehletikettierung)
-  - Cartier "3803" als "Ballon Bleu" gelistet, ist vermutlich eine Cartier Clé
-  - Omega: einzelne extrahierte "Referenznummern" sind eigentlich Kaliber-
-    oder Kollektionsnamen (321, 300M, 300) — Referenz-Extraktions-Regex
-    müsste nachgeschärft werden
-  - Heuer Montreal 110.501/110.503: Stahl-/PVD-Zuordnung in Quellen uneinheitlich
-  - Glashütte "1845" ist vermutlich kein echter Referenzcode, sondern eine
-    Marketing-Bezeichnung (Gründungsjahr)
-  - Vereinzelte model_line-Werte sehen wie Extraktions-Artefakte aus
-    ("Oysterband", "Zifferblatt Sternenhimmel") — nicht untersucht
+- **Heuer Montreal 110.501/110.503**: Stahl-/PVD-Zuordnung in den Quellen
+  uneinheitlich — model_line ist jetzt sauber ("Montreal"), aber die
+  Material-Frage selbst noch nicht recherchiert
 - **model_line-Qualität bei nicht-recherchierten/kleineren Marken**: bleibt
   oft der rohe Scraper-Titel statt eines sauberen Modellnamens (MODEL_LINES-
-  Stichwortliste in `scrapers/model_line.py` deckt nur größere Marken ab)
+  Stichwortliste in `scrapers/model_line.py` deckt nur größere Marken ab —
+  Heuer/Glashütte Original wurden ergänzt, andere kleinere Marken evtl. noch
+  betroffen, nicht systematisch geprüft)
 - **iPhone-Ansicht**: vom Nutzer noch nicht selbst final bestätigt
