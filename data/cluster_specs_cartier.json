@@ -90,5 +90,62 @@
     "reference_number": "1713",
     "case_material": "Weißgold",
     "size_mm": 19
+  },
+  {
+    "brand": "Cartier",
+    "reference_number": "100M",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 39.8
+  },
+  {
+    "brand": "Cartier",
+    "reference_number": "1847",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 41
+  },
+  {
+    "brand": "Cartier",
+    "reference_number": "3169",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Stahl-Gliederband"
+  },
+  {
+    "brand": "Cartier",
+    "reference_number": "3803",
+    "case_material": "Roségold",
+    "bezel_material": "Roségold, diamantbesetzt",
+    "bracelet_type": "Roségold-Gliederband",
+    "size_mm": 32
+  },
+  {
+    "brand": "Cartier",
+    "reference_number": "66001",
+    "case_material": "Vermeil (925 Silber vergoldet)",
+    "bracelet_type": "Lederband",
+    "size_mm": 20.5
+  },
+  {
+    "brand": "Cartier",
+    "reference_number": "866919",
+    "case_material": "Gelbgold",
+    "bezel_material": "Gelbgold, diamantbesetzt",
+    "bracelet_type": "Gelbgold-Gliederband",
+    "size_mm": 22
+  },
+  {
+    "brand": "Cartier",
+    "reference_number": "8971",
+    "case_material": "Roségold",
+    "bracelet_type": "Lederband",
+    "size_mm": 23
+  },
+  {
+    "brand": "Cartier",
+    "reference_number": "950ER",
+    "case_material": "Platin",
+    "bracelet_type": "Lederband",
+    "size_mm": 32.9
   }
 ]
