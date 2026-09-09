@@ -23,5 +23,10 @@
     "platform": "grimmeissen", "external_id": "1015932",
     "action": "exclude",
     "reason": "Spare part, not a complete watch: 'Oysterband Stahl Gold für Ref. 16613' — a replacement bracelet only."
+  },
+  {
+    "platform": "grimmeissen", "external_id": "1012554",
+    "action": "override", "field": "reference_number", "value": null,
+    "reason": "Extracted reference '55130' doesn't match any known Rolex Submariner reference format. User reviewed the listing photo and couldn't confidently identify the real reference either (vintage, likely 1970s) — left blank rather than guessed, per the project's data-quality philosophy."
   }
 ]

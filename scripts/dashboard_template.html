@@ -955,7 +955,7 @@ function renderTable() {
       <td>${r.band_material || "–"}</td>
       <td>${r.dial_color || "–"}</td>
       <td>${r.bezel_color || "–"}</td>
-      <td>${r.color_source === "image" ? "📷 Bild" : r.color_source === "text" ? "📝 Text" : "–"}</td>
+      <td>${r.color_source === "user" ? "👁 Nutzer-Check" : r.color_source === "image" ? "📷 Bild" : r.color_source === "text" ? "📝 Text" : "–"}</td>
       <td>${r.complication || "–"}</td>
       <td>${r.has_papers == null ? "–" : (r.has_papers ? "✓" : "✗")}</td>
       <td>${r.has_box == null ? "–" : (r.has_box ? "✓" : "✗")}</td>

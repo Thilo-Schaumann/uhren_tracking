@@ -7,6 +7,37 @@ neue Wünsche werden unter "Offen" ergänzt, erledigte Punkte wandern nach
 
 ## Erledigt
 
+**Rolex Zifferblatt-/Lünettenfarben-Pilot (2026-09-09)**
+- Ursprünglich als Bilderkennungs-Pilot geplant — stattdessen entschieden
+  (Nutzerwunsch): keine automatische Bilderkennung, sondern Claude zeigt die
+  Fotos, der Nutzer bestimmt die Farbe selbst. Kein Bilderkennungs-Kosten
+  anfall damit; die eigentliche Arbeit war Text-/Referenz-Recherche
+- 63 aktive Rolex Submariner/GMT-Master II/Daytona-Angebote geprüft, 42
+  einzigartige Referenzen. Für ~20 Referenzen (Hulk, Batman, Pepsi, Kermit,
+  Sprite, Root Beer etc.) ist Zifferblatt-/Lünettenfarbe technisch fix und
+  per Fachwissen bestimmbar → `data/color_variants_rolex.json`
+  (Referenz-Ebene, `color_source: "text"`)
+- Für 8 Angebote, bei denen die Farbe genuin von Uhr zu Uhr variiert (nicht
+  aus der Referenz ableitbar), hat der Nutzer die zugeschickten Fotos
+  geprüft und die Farbe bestimmt → `data/color_overrides_listings.json`
+  (Angebots-Ebene, `color_source: "user"`, höchste Priorität)
+- Referenz "55130" (ein Angebot) bewusst freigelassen — weder Nutzer noch
+  Text-Recherche konnten sie sicher zuordnen (vintage, vermutlich 1970er)
+- Dabei zwei echte Fehlextraktionen gefunden und korrigiert: Referenz
+  116610LV ("Hulk") hatte "Blau" aus "blaue Leuchtmasse" statt dem
+  tatsächlich grünen Zifferblatt; GMT-Master 16700 hatte "Weiß" aus
+  "Weißgold-Indizes" statt dem tatsächlich schwarzen Zifferblatt
+  (Referenz-Extraktion generell etwas störanfällig für Farbwörter, die
+  Nebensächliches statt das Zifferblatt beschreiben — nicht systematisch
+  behoben, nur die konkret gefundenen Fälle)
+- Neue Dashboard-Spalte **"Quelle"** zeigt pro Zeile 📝 Text / 👁
+  Nutzer-Check / 📷 Bild — Nachvollziehbarkeit wie vom Nutzer gefordert
+- Neuer Filter "Lünettenfarbe" (getrennt von "Lünette" = Material)
+- Referenz-Extraktions-Regex zweimal weiter nachgeschärft: Buchstaben-Suffix
+  war bei 3 Zeichen gedeckelt (verschluckte 4-stellige Suffixe wie "BLNR"
+  komplett), und Jahrzehnts-Angaben wie "1980er" rutschten am Jahres-Filter
+  vorbei durch — beide Fixes wirken markenübergreifend, nicht nur bei Rolex
+
 **Datenqualitäts-Fixes (2026-09-09)**
 - Referenz-Extraktion war bei 7+-stelligen Nummern komplett blind (Regex kappte
   bei 6 Ziffern) und Shopify-Scraper (Rothfuss/Cologne Watch) durchsuchten nur
@@ -99,6 +130,10 @@ Details je Marke)
 Diese Punkte wurden explizit besprochen und festgelegt — bei Unsicherheit
 gilt das hier, nicht eine Vermutung:
 
+- **"Bilderkennung" für Zifferblatt-/Lünettenfarbe bedeutet keine automatische
+  KI-Bildanalyse** (Korrektur einer früheren Annahme) — Claude schickt die
+  Fotos der offenen Fälle an den Nutzer, der Nutzer bestimmt die Farbe visuell
+  selbst. Kein Bilderkennungs-Kostenanfall dadurch
 - **Favoriten-Matching-Key**: `brand + model_line + reference_number`
   (reference_number optional — ohne sie ist der Favorit modell-/cluster-weit)
 - **Cluster-Label-Format**: `"{Modelllinie} {Gehäuse}/{Lünette}/{Armband}"`,
@@ -127,19 +162,11 @@ gilt das hier, nicht eine Vermutung:
 
 ## Offen
 
-- **Bilderkennungs-Pilot für Zifferblatt-/Lünettenfarbe**: Text-Recherche
-  bleibt Methode Nr. 1, Bilderkennung nur als Fallback wenn Text nichts
-  liefert. Pilot **ausschließlich Rolex** (Submariner, GMT-Master II,
-  Daytona) — erst Zeit-/Token-Kosten messen und dem Nutzer berichten, bevor
-  über eine Ausweitung entschieden wird. Muss pro Wert nachvollziehbar
-  machen, ob er aus Text oder Bilderkennung stammt (Spalte/Kennzeichnung,
-  Umsetzung noch offen)
-- **7-Modell-Tiefenrecherche (Varianten-Erkennung, z.B. Sub mit grüner
-  Lünette + grünem Zifferblatt)**: Rolex Submariner/GMT-Master II/Daytona,
-  AP Royal Oak, Patek Nautilus, Omega Speedmaster (Panda-Zifferblätter),
-  Tudor Black Bay (Lünettenfarben) — freigegeben, noch nicht begonnen.
-  Bilderkennung dabei nur für die 3 Rolex-Modelle, die anderen 4 vorerst
-  nur Text-Recherche
+- **7-Modell-Tiefenrecherche (Varianten-Erkennung)**: von den 3 Rolex-Modellen
+  (Submariner, GMT-Master II, Daytona) ist die Zifferblatt-/Lünettenfarbe
+  jetzt erledigt (siehe Erledigt-Sektion). Noch offen: AP Royal Oak, Patek
+  Nautilus, Omega Speedmaster (Panda-Zifferblätter), Tudor Black Bay
+  (Lünettenfarben) — reine Text-Recherche, kein Bild-/Nutzer-Check vorgesehen
 - **Täglicher Dashboard-Auto-Refresh**: einmal besprochen, aber nie
   eingerichtet. Aktuell aktualisiert sich das Dashboard nur, wenn Claude es
   manuell neu baut und veröffentlicht — der tägliche GitHub-Scrape läuft

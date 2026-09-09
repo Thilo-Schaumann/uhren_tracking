@@ -1,0 +1,50 @@
+[
+  {
+    "platform": "cologne_watch", "external_id": "15810266005888",
+    "dial_color": "Schwarz", "bezel_color": "Blau/Rot (verblasst, Alu-Insert)",
+    "nickname": "Pepsi", "color_source": "user",
+    "reason": "Nutzer hat Foto geprüft: Pepsi-Lünette, aber stark UV-ausgeblichenes Alu-Insert (typische Patina bei diesem Material/Alter)."
+  },
+  {
+    "platform": "cologne_watch", "external_id": "15797161755008",
+    "dial_color": "Braun", "bezel_color": "Braun",
+    "nickname": "Root Beer", "color_source": "user",
+    "reason": "Nutzer hat Foto geprüft: Vollgold-GMT-Master mit Jubilee-Band, braunes Zifferblatt und braune Lünette."
+  },
+  {
+    "platform": "cologne_watch", "external_id": "15797135278464",
+    "dial_color": "Schwarz", "bezel_color": "Schwarz", "nickname": null,
+    "color_source": "user",
+    "reason": "Nutzer hat Foto geprüft: reguläre GMT-Master II mit schwarzem Alu-Lünetten-Insert und schwarzem Zifferblatt (Vorkeramik-Generation, roter GMT-Zeiger). Explizit kein Spitzname — Referenz 16710 existiert auch in Pepsi/Coke-Varianten, aber genau dieses Exemplar ist die reine schwarze Version."
+  },
+  {
+    "platform": "cologne_watch", "external_id": "15756271747456",
+    "dial_color": "Braun", "bezel_color": "Braun/Gelb (zweifarbig)",
+    "color_source": "user",
+    "reason": "Nutzer hat Foto geprüft: braunes Zifferblatt, Lünette oben braun/unten gelb, Bicolor-Oysterband Stahl/Gold."
+  },
+  {
+    "platform": "cologne_watch", "external_id": "15649110557056",
+    "dial_color": "Diamant-Pavé (Gelbgold-Unterton)",
+    "color_source": "user",
+    "reason": "Nutzer hat Foto geprüft: Zifferblatt komplett mit Steinen besetzt, darunter schimmert Gelbgold durch."
+  },
+  {
+    "platform": "cologne_watch", "external_id": "15289887064448",
+    "dial_color": "Schwarz", "bezel_color": "Schwarz",
+    "color_source": "user",
+    "reason": "Nutzer hat Foto geprüft: schwarzes Zifferblatt, Lünetten-Inlay Alu schwarz (Krone/Mittelglied Gelbgold = Material, nicht Farbe des Inlays)."
+  },
+  {
+    "platform": "cologne_watch", "external_id": "15929402491264",
+    "dial_color": "Schwarz", "bezel_color": "Schwarz",
+    "color_source": "user",
+    "reason": "Nutzer hat Foto geprüft: identischer Aufbau wie die andere 16713 (schwarzes Zifferblatt, Lünetten-Inlay Alu schwarz)."
+  },
+  {
+    "platform": "grimmeissen", "external_id": "1014935",
+    "dial_color": "Schwarz", "bezel_color": "Schwarz",
+    "color_source": "user",
+    "reason": "Nutzer hat Foto geprüft: Bamford-Umbau ist komplett 'blacked out' — schwarzes Zifferblatt, schwarze Lünette."
+  }
+]
