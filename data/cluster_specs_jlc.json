@@ -100,5 +100,31 @@
     "case_material": "Gelbgold",
     "bracelet_type": "Lederband",
     "size_mm": 36
+  },
+  {
+    "brand": "Jaeger-LeCoultre",
+    "reference_number": "180.2.99",
+    "case_material": "Roségold",
+    "bracelet_type": "Lederband",
+    "size_mm": 41
+  },
+  {
+    "brand": "Jaeger-LeCoultre",
+    "reference_number": "146.240.952",
+    "case_material": "Roségold"
+  },
+  {
+    "brand": "Jaeger-LeCoultre",
+    "reference_number": "180140990",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 41
+  },
+  {
+    "brand": "Jaeger-LeCoultre",
+    "reference_number": "166.7.80",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 35
   }
 ]
