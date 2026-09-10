@@ -1,0 +1,30 @@
+[
+  {
+    "brand": "Piaget",
+    "reference_number": "1270P",
+    "case_material": "Weißgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 46.5
+  },
+  {
+    "brand": "Piaget",
+    "reference_number": "1110P",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Integriertes Stahlband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Piaget",
+    "reference_number": "15923",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 33
+  },
+  {
+    "brand": "Piaget",
+    "reference_number": "15958",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 33
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "brand": "Breguet",
+    "reference_number": "554.2",
+    "case_material": "Weißgold",
+    "bracelet_type": "Lederband",
+    "size_mm": 38.2
+  },
+  {
+    "brand": "Breguet",
+    "reference_number": "3820",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 39
+  },
+  {
+    "brand": "Breguet",
+    "reference_number": "3880",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Edelstahlband",
+    "size_mm": 44
+  },
+  {
+    "brand": "Breguet",
+    "reference_number": "3755",
+    "bracelet_type": "Lederband"
+  }
+]
