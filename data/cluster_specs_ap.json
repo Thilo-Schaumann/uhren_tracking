@@ -215,5 +215,55 @@
     "reference_number": "14800ST",
     "case_material": "Edelstahl",
     "size_mm": 36
+  },
+  {
+    "brand": "Audemars Piguet",
+    "reference_number": "1220OR.02",
+    "case_material": "Roségold",
+    "bracelet_type": "Integriertes Roségoldband",
+    "size_mm": 41
+  },
+  {
+    "brand": "Audemars Piguet",
+    "reference_number": "1256ST.01",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Integriertes Stahlband",
+    "size_mm": 37
+  },
+  {
+    "brand": "Audemars Piguet",
+    "reference_number": "1256ST.02",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Integriertes Stahlband",
+    "size_mm": 38
+  },
+  {
+    "brand": "Audemars Piguet",
+    "reference_number": "1320ST.04",
+    "case_material": "Edelstahl",
+    "bracelet_type": "Integriertes Stahlband",
+    "size_mm": 41
+  },
+  {
+    "brand": "Audemars Piguet",
+    "reference_number": "25940SK",
+    "case_material": "Edelstahl",
+    "bezel_material": "Kautschuk",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Audemars Piguet",
+    "reference_number": "26470IO",
+    "case_material": "Titan",
+    "bezel_material": "Keramik",
+    "bracelet_type": "Kautschukband",
+    "size_mm": 42
+  },
+  {
+    "brand": "Audemars Piguet",
+    "reference_number": "6005BA",
+    "case_material": "Gelbgold",
+    "bracelet_type": "Integriertes Goldband"
   }
 ]
