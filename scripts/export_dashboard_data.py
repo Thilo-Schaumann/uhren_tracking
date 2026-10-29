@@ -12,6 +12,7 @@ from db import connect
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 THUMBNAIL_CACHE = DATA_DIR / "thumbnails_cache.json"
+WOT_CONFIG = DATA_DIR / "worldoftime_brands.json"
 MODEL_VARIANTS = DATA_DIR / "model_variants.json"
 BRAND_LOGOS = DATA_DIR / "brand_logos.json"
 OFFICIAL_PRICES = DATA_DIR / "official_prices.json"
@@ -119,6 +120,10 @@ def _price_bucket(price: float | None) -> str | None:
 def build():
     conn = connect()
     thumbnails = json.loads(THUMBNAIL_CACHE.read_text()) if THUMBNAIL_CACHE.exists() else {}
+    # World of Time's copyright notice forbids copying their photos without written consent,
+    # so their images stay out of the dashboard (-> no thumbnail download either) until the
+    # "thumbnails" switch in worldoftime_brands.json is turned on.
+    wot_photos = json.loads(WOT_CONFIG.read_text()).get("thumbnails", False) if WOT_CONFIG.exists() else False
     cluster_specs = _load_cluster_specs()
     color_variants = _load_color_variants()
     color_overrides_listings = _load_color_overrides_listings()
@@ -202,7 +207,8 @@ def build():
             "case_material": spec.get("case_material"),
             "bezel_material": spec.get("bezel_material"),
             "bracelet_type": spec.get("bracelet_type"),
-            "image_url": thumbnails.get(image, image), "url": url,
+            "image_url": thumbnails.get(image, image) if (platform != "worldoftime" or wot_photos) else None,
+            "url": url,
             "nickname": final_nickname,
             "price_bucket": _price_bucket(price),
         })

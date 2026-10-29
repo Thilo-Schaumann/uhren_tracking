@@ -21,6 +21,7 @@
     --p-grimmeissen: #2a78d6;
     --p-rothfuss: #eb6834;
     --p-cologne: #1baf7a;
+    --p-wot: #8a5fd1;
     --logo-plate: #f3f2ee;
   }
   @media (prefers-color-scheme: dark) {
@@ -31,7 +32,7 @@
       --gridline: #2c2c2a; --border: rgba(255,255,255,0.10);
       --accent: #3987e5; --accent-ink: #ffffff;
       --star-off: #52514e; --star-on: #c98500; --good: #0ca30c;
-      --p-grimmeissen: #3987e5; --p-rothfuss: #d95926; --p-cologne: #199e70;
+      --p-grimmeissen: #3987e5; --p-rothfuss: #d95926; --p-cologne: #199e70; --p-wot: #9c74dd;
       --logo-plate: #2c2c2a;
     }
   }
@@ -42,7 +43,7 @@
     --gridline: #2c2c2a; --border: rgba(255,255,255,0.10);
     --accent: #3987e5; --accent-ink: #ffffff;
     --star-off: #52514e; --star-on: #c98500; --good: #0ca30c;
-    --p-grimmeissen: #3987e5; --p-rothfuss: #d95926; --p-cologne: #199e70;
+    --p-grimmeissen: #3987e5; --p-rothfuss: #d95926; --p-cologne: #199e70; --p-wot: #9c74dd;
     --logo-plate: #2c2c2a;
   }
 
@@ -208,7 +209,7 @@
   <div class="topbar">
     <h1>Zeitmarkt</h1>
     <div style="display:flex; align-items:center; gap:14px;">
-      <div class="meta">Daten vom <span id="generatedAt" class="num"></span> · Grimmeissen · Rothfuss · Cologne Watch</div>
+      <div class="meta">Daten vom <span id="generatedAt" class="num"></span> · Grimmeissen · Rothfuss · Cologne Watch · World of Time</div>
       <button class="moon-btn" id="moonBtn" title="Mondphase" aria-label="Mondphase anzeigen"></button>
     </div>
   </div>
@@ -301,8 +302,8 @@
 <script>
 const DATA = __DASHBOARD_DATA__;
 
-const PLATFORM_LABEL = { grimmeissen: "Grimmeissen", rothfuss: "Rothfuss", cologne_watch: "Cologne Watch" };
-const PLATFORM_COLOR_VAR = { grimmeissen: "--p-grimmeissen", rothfuss: "--p-rothfuss", cologne_watch: "--p-cologne" };
+const PLATFORM_LABEL = { grimmeissen: "Grimmeissen", rothfuss: "Rothfuss", cologne_watch: "Cologne Watch", worldoftime: "World of Time" };
+const PLATFORM_COLOR_VAR = { grimmeissen: "--p-grimmeissen", rothfuss: "--p-rothfuss", cologne_watch: "--p-cologne", worldoftime: "--p-wot" };
 
 let favorites = [];
 let db = null;
@@ -466,7 +467,7 @@ function renderFavoriteTile(fav) {
         }</div></div>
       </div>
       <div class="portal-rows">
-        ${["grimmeissen", "rothfuss", "cologne_watch"].map(p => {
+        ${["grimmeissen", "rothfuss", "cologne_watch", "worldoftime"].map(p => {
           const price = byPlatform[p];
           return `<div class="portal-row ${price == null ? "unavailable" : ""}">
             <span class="name"><span class="dot" style="background:var(${PLATFORM_COLOR_VAR[p]})"></span>${PLATFORM_LABEL[p]}</span>
@@ -712,7 +713,7 @@ function renderModelDetail(root, brand, modelLine) {
       </div>
     </div>
     <div class="legend">
-      ${["grimmeissen", "rothfuss", "cologne_watch"].map(p => `<span class="item"><span class="dot" style="background:var(${PLATFORM_COLOR_VAR[p]})"></span>${PLATFORM_LABEL[p]}</span>`).join("")}
+      ${["grimmeissen", "rothfuss", "cologne_watch", "worldoftime"].map(p => `<span class="item"><span class="dot" style="background:var(${PLATFORM_COLOR_VAR[p]})"></span>${PLATFORM_LABEL[p]}</span>`).join("")}
     </div>
     <div class="drilldown-chart">
       ${renderAxisChart(m.listings.map(l => ({ price: l.price, colorVar: PLATFORM_COLOR_VAR[l.platform], title: `${l.reference_number || ""} ${PLATFORM_LABEL[l.platform]}`, url: l.url })), { height: 140, showPriceLabel: true })}
