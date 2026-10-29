@@ -5,9 +5,15 @@ on:
     - cron: "0 3 * * *"  # 05:00 CEST / 03:00 UTC — shifts to 04:00 CET after DST ends in October
   workflow_dispatch: {}
 
+# One job writes data/watches.db and pushes it — never let two runs overlap (binary conflicts).
+concurrency:
+  group: daily-scrape
+  cancel-in-progress: false
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    timeout-minutes: 120  # World of Time's first run fetches several hundred detail pages politely
     steps:
       - uses: actions/checkout@v4
 

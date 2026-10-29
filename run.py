@@ -2,7 +2,7 @@
 import sys
 
 from db import connect, mark_missing_as_sold, today_str, upsert_listing
-from scrapers import cologne_watch, grimmeissen, rothfuss
+from scrapers import cologne_watch, grimmeissen, rothfuss, worldoftime
 from scrapers.overrides import apply_overrides
 
 SCRAPERS = {
@@ -30,6 +30,13 @@ def main():
         mark_missing_as_sold(conn, platform, seen_ids, today)
         conn.commit()
         print(f"[{platform}] {len(items)} active listings")
+
+    # World of Time keeps its own run loop (needs the DB, crawls per brand, polite pacing)
+    # and runs last so that its slow first run can't delay the other sources.
+    try:
+        worldoftime.run(conn, today)
+    except Exception as exc:
+        print(f"[worldoftime] run failed: {exc}", file=sys.stderr)
 
     conn.close()
 

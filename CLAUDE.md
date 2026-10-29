@@ -18,6 +18,12 @@ The weekly local backup (`scripts/backup_data.py`, Sunday 18:00 scheduled
 task) copies `data/watches.db` + master data + CSV exports to `data/backup/`.
 This is a plain file copy, independent of git — don't route it through git.
 
+## Tests
+
+`python3 -m unittest discover -s tests -t .` — covers the World of Time scraper (parser
+against trimmed real pages, run loop against a fake fetcher). Run it after touching
+`scrapers/worldoftime.py`, `db.py` or `run.py`.
+
 ## Git workflow
 
 - Commit locally with `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>`.

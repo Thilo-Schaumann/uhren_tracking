@@ -10,9 +10,22 @@ Tägliche Datenbank zu Uhrenmodellen über mehrere Online-Händler, um Verweilda
 | Grimmeissen (grimmeissen.de) | Statisches HTML, Listing + Detailseite je Uhr (Referenznummer) |
 | Rothfuss Watch Boutique (rothfuss-watches.de) | Shopify `/collections/alle-uhren/products.json` |
 | Cologne Watch (colognewatch.de) | Shopify `/collections/herrenuhren/products.json` |
+| World of Time (worldoftime.de) | Server-gerendertes HTML, je Marke paginiert (`scrapers/worldoftime.py`, Marken in `data/worldoftime_brands.json`) |
 
 Ein Angebot gilt als verkauft, sobald es in einem täglichen Lauf nicht mehr
 auftaucht bzw. bei Shopify `available: false` wird.
+
+**World of Time** weicht in drei Punkten ab: Verkaufte Uhren bleiben dort gelistet
+(Label "Sold") — das setzt `status='sold'` und `sold_at`, `last_seen` bleibt der
+letzte Tag als offenes Inserat. "Price On Request" wird als `status='on_request'`
+ohne Preis gespeichert (nicht in Preisstatistiken). Detailseiten werden nur für
+neue Wot-IDs geladen, bekannte Uhren aktualisieren sich aus der Liste. Alles
+sequentiell mit 1–3 s Pause, Retry/Backoff, Abbruch nach wiederholten Fehlern. Ist
+eine Marke nicht vollständig durchgelaufen, wird für sie nichts als "verkauft"
+markiert. Preise sind differenzbesteuert (§ 25 UStG) und zzgl. Versand
+(`listings.price_note`). Fotos: WOT-Urheberrechtshinweis verbietet Kopien ohne
+Zustimmung, daher zeigt das Dashboard keine WOT-Thumbnails, solange `"thumbnails"`
+in `data/worldoftime_brands.json` auf `false` steht.
 
 ## Projektstruktur
 
@@ -20,6 +33,8 @@ auftaucht bzw. bei Shopify `available: false` wird.
 - `data/` — `watches.db` + Stammdaten (`model_variants.json`, `brand_logos.json`,
   `official_prices.json`, `cluster_specs_*.json` — ein File pro recherchierter
   Marke); `thumbnails_cache.json` und `backup/` sind generiert (git-ignoriert)
+- `tests/` — Parser- und Lauf-Tests für World of Time mit gekürzten Original-Seiten
+  (`python3 -m unittest discover -s tests -t .`)
 - `scripts/` — Dashboard-Build (`export_dashboard_data.py`, `build_dashboard.py`,
   `dashboard_template.html`) und Pflege-Skripte (`fetch_thumbnails.py`,
   `fetch_brand_logos.py`, `fetch_ap_prices.py`, `backup_data.py`)
@@ -63,7 +78,10 @@ Spezifikation fallen auf die bloße Modelllinie zurück.
 ## Automatisierung
 
 `.github/workflows/daily.yml` läuft täglich um 05:00 CEST, aktualisiert
-`data/watches.db` und committet die Änderung zurück ins Repo.
+`data/watches.db` und committet die Änderung zurück ins Repo. Ein einziger Job für
+alle Quellen (World of Time läuft zuletzt) — zwei Jobs, die dieselbe Binärdatei
+pushen, würden sich gegenseitig Konflikte erzeugen. Der erste WOT-Lauf holt alle
+Detailseiten nach (ca. 15–20 Min), danach nur noch Neuzugänge.
 
 Ein wöchentlicher lokaler Task (Sonntag 18:00) sichert `data/watches.db` +
 Stammdaten sowie CSV-Exports jeder Tabelle nach `data/backup/` — unabhängig

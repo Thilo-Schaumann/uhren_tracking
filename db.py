@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS listings (
     first_seen TEXT NOT NULL,
     last_seen TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'active',
+    sold_at TEXT,
+    price_note TEXT,
     UNIQUE(platform, external_id)
 );
 
@@ -61,6 +63,8 @@ LISTING_COLUMNS_V2 = [
     ("dial_color", "TEXT"),
     ("image_url", "TEXT"),
     ("complication", "TEXT"),
+    ("sold_at", "TEXT"),
+    ("price_note", "TEXT"),
 ]
 
 
@@ -125,17 +129,21 @@ def upsert_listing(conn: sqlite3.Connection, item: dict, today: str) -> int:
     return listing_id
 
 
-def mark_missing_as_sold(conn: sqlite3.Connection, platform: str, seen_external_ids: set, today: str):
-    """Any active listing for this platform not seen in today's scrape is considered sold."""
-    rows = conn.execute(
-        "SELECT id, external_id FROM listings WHERE platform = ? AND status = 'active'",
-        (platform,),
-    ).fetchall()
-    for listing_id, external_id in rows:
+def mark_missing_as_sold(conn: sqlite3.Connection, platform: str, seen_external_ids: set, today: str,
+                         brand: str | None = None):
+    """Any open listing (active or price-on-request) for this platform not seen in today's
+    scrape is considered sold. `brand` limits the check to one brand, for sources that are
+    crawled per brand and may only have been crawled completely for some of them."""
+    query = "SELECT id, external_id FROM listings WHERE platform = ? AND status IN ('active', 'on_request')"
+    params = [platform]
+    if brand is not None:
+        query += " AND brand = ?"
+        params.append(brand)
+    for listing_id, external_id in conn.execute(query, params).fetchall():
         if external_id not in seen_external_ids:
             conn.execute(
-                "UPDATE listings SET status = 'sold' WHERE id = ?",
-                (listing_id,),
+                "UPDATE listings SET status = 'sold', sold_at = ? WHERE id = ?",
+                (today, listing_id),
             )
 
 

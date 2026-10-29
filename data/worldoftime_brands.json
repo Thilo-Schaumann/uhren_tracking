@@ -1,0 +1,16 @@
+{
+  "_comment": "World of Time: welche Marken gescrapt werden. 'brand' ist der in der DB verwendete kanonische Name (muss zu den cluster_specs passen), 'wot_name' der Name im Marken-Filter von worldoftime.de. Marke aktivieren = 'enabled' auf true setzen. 'thumbnails': false = keine verkleinerten WOT-Fotos im Dashboard (deren Urheberrechtshinweis verbietet Kopien ohne schriftliche Zustimmung); auf true setzen, sobald WOT zugestimmt hat.",
+  "thumbnails": false,
+  "brands": [
+    {"wot_name": "Rolex", "brand": "Rolex", "manufacturer_id": "8c7da080-f5ab-4e34-ac21-2262c28a4428", "enabled": true},
+    {"wot_name": "Patek Philippe", "brand": "Patek Philippe", "manufacturer_id": "3b68051e-d792-428d-be0e-a3ee39623cfa", "enabled": false},
+    {"wot_name": "Omega", "brand": "Omega", "manufacturer_id": "b030ab6d-ec54-409e-88fc-14d9b60f8226", "enabled": false},
+    {"wot_name": "IWC", "brand": "IWC", "manufacturer_id": "e9a017f8-7faa-45f2-879f-b02e26da733c", "enabled": false},
+    {"wot_name": "Audemars Piguet", "brand": "Audemars Piguet", "manufacturer_id": "bdb9e292-2c04-45dd-afb3-b1ee43d3f6d5", "enabled": false},
+    {"wot_name": "Jaeger LeCoultre", "brand": "Jaeger-LeCoultre", "manufacturer_id": "5b9d232b-c764-44f9-a3d8-0c450839dc7a", "enabled": false},
+    {"wot_name": "Vacheron Constantin", "brand": "Vacheron Constantin", "manufacturer_id": "4282b65f-1d49-475c-bc13-05b38dfbc3f0", "enabled": false},
+    {"wot_name": "Tudor", "brand": "Tudor", "manufacturer_id": "8076c49a-a1d0-4244-b52c-563f1140d0c2", "enabled": false},
+    {"wot_name": "A. Lange & Söhne", "brand": "A. Lange & Söhne", "manufacturer_id": "fa8d2847-893d-45ea-83a0-b378b841d455", "enabled": false},
+    {"wot_name": "Panerai", "brand": "Panerai", "manufacturer_id": "f6d63dd8-f0ad-4d5c-9efe-d461f0356577", "enabled": false}
+  ]
+}
